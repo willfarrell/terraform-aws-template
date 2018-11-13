@@ -6,4 +6,19 @@
 *.tfstate.*
 
 # .tfvars files
-*.tfvars
+#*.tfvars
+
+
+terraform-profile.auto.tfvars
+
+# Node
+node_modules
+package-lock.json
+
+# IDE
+.idea
+*.iml
+
+
+# OS
+.DS_Store
