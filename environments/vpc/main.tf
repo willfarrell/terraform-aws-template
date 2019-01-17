@@ -11,7 +11,7 @@ terraform {
 provider "aws" {
   profile = "sensnet-${terraform.workspace}"
   region  = "${local.workspace["region"]}"
-  }
+}
 
 # VPC
 module "vpc" {

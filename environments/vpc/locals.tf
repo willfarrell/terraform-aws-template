@@ -1,12 +1,12 @@
 locals {
-  env       = {
-    default     = {
+  env = {
+    default = {
       env    = "${terraform.workspace}"
       name   = "${**NAME**}"
       region = "us-west-2"
     }
 
-    production  = {
+    production = {
       cidr_block            = "10.*.0.0/16"
       az_count              = "3"
       nat_type              = "gateway"
@@ -15,7 +15,7 @@ locals {
       bastion_sudo_group    = "ProductionAdmin"
     }
 
-    staging     = {
+    staging = {
       cidr_block            = "10.*.0.0/16"
       az_count              = "2"
       nat_type              = "gateway"
@@ -24,7 +24,7 @@ locals {
       bastion_sudo_group    = "StagingAdmin"
     }
 
-    testing     = {
+    testing = {
       cidr_block            = "10.*.0.0/16"
       az_count              = "2"
       nat_type              = "instance"

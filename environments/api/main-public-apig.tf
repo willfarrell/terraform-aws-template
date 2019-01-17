@@ -5,7 +5,7 @@ terraform {
     region         = "us-east-1"
     profile        = "${**PROFILE**}"
     dynamodb_table = "terraform-state-${**NAME**}"
-    encrypt        = true // TODO everywhere
+    encrypt        = true                          // TODO everywhere
   }
 }
 
@@ -35,7 +35,7 @@ data "terraform_remote_state" "vpc" {
 
 # Cert
 data "aws_acm_certificate" "main" {
-  domain   = "${local.workspace["domain"]}"
+  domain = "${local.workspace["domain"]}"
 
   statuses = [
     "ISSUED",

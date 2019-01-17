@@ -45,11 +45,10 @@ module "cache" {
   engine         = "${local.workspace["cache_engine"]}"
   engine_version = "${local.workspace["cache_engine_version"]}"
 
-  security_group_ids = [
-    #"${data.terraform_remote_state.vpc.bastion_security_group_id}",
-    #"${data.terraform_remote_state.api.ecs_security_group_id}",
-  ]
+  security_group_ids = []
 
+  #"${data.terraform_remote_state.vpc.bastion_security_group_id}",
+  #"${data.terraform_remote_state.api.ecs_security_group_id}",
 }
 
 output "cache_endpoint" {
@@ -65,25 +64,30 @@ output "cache_security_group_id" {
 }
 
 module "elastic" {
-  source              = "git@github.com:tesera/terraform-modules//elasticsearch?ref=v0.2.9"
-  name                = "${local.workspace["name"]}"
-  vpc_id              = "${data.terraform_remote_state.vpc.vpc_id}"
-  private_subnet_ids  = [
-    "${data.terraform_remote_state.vpc.private_subnet_ids}"]
+  source = "git@github.com:tesera/terraform-modules//elasticsearch?ref=v0.2.9"
+  name   = "${local.workspace["name"]}"
+  vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+
+  private_subnet_ids = [
+    "${data.terraform_remote_state.vpc.private_subnet_ids}",
+  ]
+
   #type                = "${local.workspace["elastic_type"]}"           # N/A
-  instance_type       = "${local.workspace["elastic_instance_type"]}"
-  node_count          = "${local.workspace["relastic_node_count"]}"
+  instance_type = "${local.workspace["elastic_instance_type"]}"
+  node_count    = "${local.workspace["relastic_node_count"]}"
 
   #engine              = "${local.workspace["elastic_engine"]}"          # N/A
-  engine_version      = "${local.workspace["elastic_engine_version"]}"
+  engine_version = "${local.workspace["elastic_engine_version"]}"
 
   # bootstrap
-  ssh_username        = "iam.username"
-  ssh_identity_file   = "~/.ssh/id_rsa"
-  bastion_ip          = "${data.terraform_remote_state.vpc.bastion_ip}"
+  ssh_username      = "iam.username"
+  ssh_identity_file = "~/.ssh/id_rsa"
+  bastion_ip        = "${data.terraform_remote_state.vpc.bastion_ip}"
+
   #bootstrap_file      = "${local.workspace["elastic_bootstrap_file"]}"
-  security_group_ids  = [
-    "${data.terraform_remote_state.vpc.bastion_security_group_id}"]
+  security_group_ids = [
+    "${data.terraform_remote_state.vpc.bastion_security_group_id}",
+  ]
 }
 
 output "elastic_endpoint" {
@@ -129,12 +133,10 @@ module "rds" {
   bastion_ip        = "${data.terraform_remote_state.vpc.bastion_ip}"
 
   #bootstrap_folder        = "${local.workspace["rds_bootstrap_folder"]}"
-  security_group_ids = [
-    #"${data.terraform_remote_state.vpc.bastion_security_group_id}",
-    #"${data.terraform_remote_state.api.ecs_security_group_id}",
-  ]
+  security_group_ids = []
 
-
+  #"${data.terraform_remote_state.vpc.bastion_security_group_id}",
+  #"${data.terraform_remote_state.api.ecs_security_group_id}",
 }
 
 output "rds_endpoint" {

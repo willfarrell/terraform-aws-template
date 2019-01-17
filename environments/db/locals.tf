@@ -1,16 +1,15 @@
 locals {
-
-  env       = {
-    default     = {
-      env                    = "${terraform.workspace}"
-      name                   = "${**NAME**}"
-      region                 = "us-west-2"
+  env = {
+    default = {
+      env    = "${terraform.workspace}"
+      name   = "${**NAME**}"
+      region = "us-west-2"
 
       # Cache
-      cache_instance_type    = "cache.t2.micro"
-      cache_engine           = "redis"
-      cache_engine_version   = "4.0"
-      cache_read_replicas    = 0
+      cache_instance_type  = "cache.t2.micro"
+      cache_engine         = "redis"
+      cache_engine_version = "4.0"
+      cache_read_replicas  = 0
 
       # Elastic
       elastic_instance_type  = "r4.large.elasticsearch"
@@ -18,17 +17,17 @@ locals {
       elastic_bootstrap_file = "${path.module}/elasticsearch/mappings.json"
 
       # RDS
-      rds_instance_type      = "db.t2.micro"
-      rds_replica_count      = 0
-      rds_db_name            = "onguard"
-      rds_bootstrap_folder   = "${path.module}/mysql"
-      rds_engine_version     = "5.7"
+      rds_instance_type    = "db.t2.micro"
+      rds_replica_count    = 0
+      rds_db_name          = "onguard"
+      rds_bootstrap_folder = "${path.module}/mysql"
+      rds_engine_version   = "5.7"
 
       ## cluster
-      rds_engine_mode        = "provisioned"
+      rds_engine_mode = "provisioned"
     }
 
-    production  = {
+    production = {
       multi_az                    = true
       apply_immediately           = false
       cache_type                  = "cluster"
@@ -43,7 +42,7 @@ locals {
       rds_backup_retention_period = 90
     }
 
-    staging     = {
+    staging = {
       multi_az                    = true
       apply_immediately           = false
       cache_type                  = "cluster"
@@ -58,7 +57,7 @@ locals {
       rds_backup_retention_period = 30
     }
 
-    testing     = {
+    testing = {
       multi_az                    = false
       apply_immediately           = true
       cache_type                  = "service"

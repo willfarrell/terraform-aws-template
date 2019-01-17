@@ -16,7 +16,7 @@ provider "aws" {
 
 module "apig-logs" {
   source = "git@github.com:tesera/terraform-modules//account/api-gateway?ref=v0.2.1"
-  }
+}
 
 data "terraform_remote_state" "master" {
   backend = "s3"
@@ -35,3 +35,4 @@ data "terraform_remote_state" "master" {
 //  master_account_id = "${data.terraform_remote_state.master.account_id}"
 //  roles             = "${var.roles}"
 //}
+
