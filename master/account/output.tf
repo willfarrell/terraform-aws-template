@@ -1,16 +1,16 @@
 # Used by environments/account
 output "account_id" {
-  value = "${module.account.id}"
+  value = "${module.defaults.account_id}"
 }
 
-output "account_alias" {
-  value = "${module.account.alias}"
+output "sub_accounts" {
+  value = "${var.sub_accounts}"
 }
 
 output "groups" {
-  value = "${module.account.groups}"
+  value = "${module.groups.list}"
 }
 
-output "sub_account_emails" {
-  value = "${module.account.sub_account_emails}"
+output "bastion_role_arns" {
+  value = "${module.bastion_roles.arns}"
 }

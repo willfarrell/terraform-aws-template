@@ -1,41 +1,53 @@
 terraform {
   backend "s3" {
-    bucket         = "terraform-state"
-    key            = "environment/app/terraform.tfstate"
+    bucket         = "terraform-state-${**NAME**}"
+    key            = "app/terraform.tfstate"
     region         = "us-east-1"
-    profile        = "tesera"
-    dynamodb_table = "terraform-state"
+    profile        = "${**PROFILE**}"
+    dynamodb_table = "terraform-state-${**NAME**}"
   }
 }
 
 provider "aws" {
-  region  = "${var.aws_region}"
-  profile = "${var.profile}"
-
-  assume_role = {
-    role_arn = "arn:aws:iam::*:role/admin"
-  }
+  profile = "sensnet-${terraform.workspace}"
+  region  = "${local.workspace["region"]}"
 }
 
 provider "aws" {
+  profile = "sensnet-${terraform.workspace}"
   region  = "us-east-1"
-  profile = "${var.profile}"
   alias   = "edge"
-
-  assume_role = {
-    role_arn = "arn:aws:iam::*:role/admin"
-  }
 }
 
-## States
-//data "terraform_remote_state" "vpc" {
-//  backend = "s3"
-//
-//  config {
-//    bucket  = "terraform-state"
-//    key     = "vpc/terraform.tfstate"
-//    region  = "us-east-1"
-//    profile = "tesera"
-//  }
-//}
+data "aws_acm_certificate" "main" {
+  provider = "aws.edge"
+  domain   = "${local.workspace["domain"]}"
 
+  statuses = [
+    "ISSUED",
+  ]
+}
+
+module "waf" {
+  source        = "git@github.com:tesera/terraform-modules//waf-edge-owasp?ref=v0.2.4"
+  name          = "${local.workspace["name"]}"
+  defaultAction = "ALLOW"
+}
+
+output "web_acl_id" {
+  value = "${module.waf.id}"
+}
+
+module "app" {
+  source = "git@github.com:tesera/terraform-modules//public-static-assets?ref=v0.2.4"
+  name   = "${local.workspace["name"]}"
+
+  aliases = [
+    "${local.workspace["domain"]}",
+  ]
+
+  #acm_certificate_arn           = "${data.aws_acm_certificate.main.arn}"
+  web_acl_id                    = "${module.waf.id}"
+  lambda_viewer_request_default = true
+  lambda_viewer_response        = "${file("${path.module}/lambda-viewer-response.js")}"
+}

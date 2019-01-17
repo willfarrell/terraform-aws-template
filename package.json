@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "commitmsg": "commitlint -e $GIT_PARAMS",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && npm run lint:tf",
     "install:npm": "find . -name package.json -not -path \"*/node_modules/*\" -exec bash -c \"npm --prefix \\$(dirname {}) install --production --no-audit\" \\;",
     "build:apig": "echo 'make apig routes'",
     "build:docker": "find . -name Dockerfile -exec bash -c \"echo $(dirname {})\"",

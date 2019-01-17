@@ -1,47 +1,5 @@
 # Infrastructure
 
-## Getting Started
-
-### Installing Terraform
-```bash
-$ brew install terraform
-```
-
-### Installing Terraform-Prime
-```bash
-$ wget **TODO willfarrell/terraform-prime** > /usr/local/bin
-```
-
-### Install node dependencies
-```bash
-$ npm run install:npm
-```
-
-## Project Structure
-
-```bash
-${project}-infrastructure
-|-- package.json	# Script shortcuts (lint, install, deploy, test) & versioning?
-|-- master			# Setup for root level account
-|   |-- state		# Sets up state management for terraform
-|   |-- account     # Account setup (Groups, Monitoring)
-|   |-- users		# IAM Users
-|-- operations		# Setup for operation pieces
-|   |-- account     # Account setup (Roles, Monitoring)
-|   |-- cicd		# Jenkins
-|   |-- dns			# Route53
-|   |-- logging		# ELK & CloudWatch
-|   |-- secrets		# HashiCorp Vault
-|-- environments
-|   |-- account     # Account setup (Roles, Monitoring)
-|   |-- app			# Public static assets
-|   |-- api			# Public/Private API endpoints and support infrastructure
-|   |-- dashboard	# Ops dashboards
-|   |-- db			# Databases
-|   |-- vpc			# VPC & Networking
-|-- modules			# Collection of project specific modules
-```
-
 ## Accounts
 
 Name        | ID           | Root Email         |
@@ -56,6 +14,78 @@ forensics   |              |                    |
 
 TODO add in suggested colours
 
+## Project Structure
+
+```bash
+${project}-infrastructure
+|-- package.json	# Script shortcuts (lint, install, deploy, test) & versioning?
+|-- amis            # Collection of AMIs, built by Packer
+|   |-- {name}      # AMI files
+|-- master			# Setup for root level account
+|   |-- state		# Sets up state management for terraform
+|   |-- account     # Account setup (Groups, Monitoring)
+|   |-- users		# IAM Users
+|-- operations		# Setup for operation pieces
+|   |-- account     # Account setup (Roles, Monitoring)
+|   |-- cicd		# Jenkins
+|   |-- dns			# Route53
+|   |-- logging		# ELK & CloudWatch
+|   |-- secrets		# HashiCorp Vault
+|-- environments
+|   |-- account     # Account setup (Roles, Monitoring)
+|   |-- app			# Public static assets
+|   |-- api			# Public/Private API endpoints and support infrastructure (cache, events, lambda)
+|   |-- db			# Databases
+|   |-- ops     	# Ops dashboards
+|   |-- vpc			# VPC & Networking
+|-- modules			# Collection of project specific modules
+```
+
+## Getting Started
+
+### Installing CLIs
+```bash
+$ brew install terraform
+
+# Optional, for building AMIs
+$ brew install packer
+```
+
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html)
+- [AWS SSM Plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html)
+- [AWS ECS CLI](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_installation.html)
+
+
+### Build AMIs
+To create the AMIs, go to the respective subfolder (`/amis/*/`), edit the `variables.json`, and run:
+```bash
+$ packer build -var-file=variables.json ami.json
+```
+
+### Setup Terraform Workspaces
+To create the workspaces, go to the respective subfolder (`/environments/*/`), and run:
+
+```bash
+$ terraform init
+$ terraform workspace new production
+$ terraform workspace new staging
+$ terraform workspace new testing
+$ terraform workspace new development
+```
+
+Ensure you have the right workspace selected before you `apply`.
+
+```bash
+$ terraform workspace select development
+$ terraform workspace list
+```
+
+### Install node dependencies
+```bash
+$ npm run install:npm
+```
+
+
 ## Switch Roles
 - `admin`
 - `developer`
@@ -63,8 +93,47 @@ TODO add in suggested colours
 TODO complete policy for developer
 TODO add in `audit` role?
 
+## Terraform Apply Order
+1. master/state
+1. master/account
+    - [ ] Sub-Accounts / Organization (Optional)
+    - [x] Groups for sub account access
+    - [x] Roles for sub accounts (bastion)
+    - [ ] Users (Optional)
+    - [ ] CloudTrail
+    - [ ] Security Hub
+1. environment/bootstrap
+    - [x] admin role
+1. environment/account
+    - [ ] other roles (developer, operator, audit, etc)
+    - [x] API Gateway Logs
+    - [ ] CloudTrail
+    - [ ] GuardDuty
+    - [ ] Inspector Agent
+    - [ ] Macie
+1. environment/vpc
+    - [x] VPC
+    - [x] VPC Endpoints
+    - [x] Bastion
+1. environment/db
+    - [x] RDS
+    - [x] ElasticCache
+    - [x] ElasticSearch
+1. environment/api
+    - [-] DynamoDB
+    - [x] ECS
+    - [ ] API Gateway
+    - [ ] Events, SQS, SNS, Lambda, S3,
+1. environment/app
+    - [-] CloudFront
+    - [-] S3
+1. environment/ops
+    - [ ] CloudWatch Dashboards
+
+
 ## Built With
 - [Terraform](https://www.terraform.io/)
+- [Packer](https://www.packer.io/)
 - [NodeJS](https://nodejs.org/en/)
 
 ## Contributing

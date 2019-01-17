@@ -1,4 +1,10 @@
-profile = "test"
-name = "tesera-test"
-account_alias = ""
-account_email = "will.farrell@tesera.com"
+name         = "app-name"
+profile      = "app-profile"
+
+sub_accounts = {
+  development = "*********"
+  testing     = "*********"
+  staging     = "*********"
+  production  = "*********"
+  operations  = "*********"
+}

@@ -1,58 +1,65 @@
 terraform {
   backend "s3" {
-    bucket         = "terraform-state-${var.name}"
-    key            = "${var.environment}/vpc/terraform.tfstate"
+    bucket         = "terraform-state-${**NAME**}"
+    key            = "vpc/terraform.tfstate"
     region         = "us-east-1"
-    profile        = "${var.profile}"
-    dynamodb_table = "terraform-state-${var.name}"
+    profile        = "${**PROFILE**}"
+    dynamodb_table = "terraform-state-${**NAME**}"
   }
 }
 
 provider "aws" {
-  region  = "${var.aws_region}"
-  profile = "${var.profile}"
-
-  assume_role = {
-    role_arn = "arn:aws:iam::${var.account_id}:role/admin"
+  profile = "sensnet-${terraform.workspace}"
+  region  = "${local.workspace["region"]}"
   }
-}
-
-provider "aws" {
-  region  = "us-east-1"
-  profile = "${var.profile}"
-  alias   = "edge"
-
-  assume_role = {
-    role_arn = "arn:aws:iam::${var.account_id}:role/admin"
-  }
-}
 
 # VPC
 module "vpc" {
-  source     = ""
-  name       = "${var.name}"
-  az_count   = "1"
-  cidr_block = "10.5.0.0/16"
+  source     = "git@github.com:tesera/terraform-modules//vpc?ref=v0.2.4"
+  name       = "${local.workspace["name"]}"
+  az_count   = "${local.workspace["az_count"]}"
+  cidr_block = "${local.workspace["cidr_block"]}"
+  nat_type   = "${local.workspace["nat_type"]}"
 }
 
 ## Public Subnets
-### Bastion
-//module "bastion" {
-//  source            = "bastion"
-//  name              = "${var.name}"
-//  vpc_id            = "${module.vpc.id}"
-//  public_subnet_ids = "${module.vpc.public_subnet_ids}"
-//  key_name          = "${local.key_name}"
-//  iam_user_groups   = "Admin"
-//}
-//
-//output "bastion_ip" {
-//  value = "${module.bastion.public_ip}"
-//}
-//
-//output "bastion_billing_suggestion" {
-//  value = "${module.bastion.billing_suggestion}"
-//}
+
+data "terraform_remote_state" "master" {
+  backend = "s3"
+
+  config = {
+    bucket  = "terraform-state-onguard"
+    key     = "master/account/terraform.tfstate"
+    region  = "us-east-1"
+    profile = "sensnet"
+  }
+}
+
+module "bastion" {
+  source            = "git@github.com:tesera/terraform-modules//bastion?ref=v0.2.4"
+  name              = "${local.workspace["name"]}"
+  instance_type     = "${local.workspace["bastion_instance_type"]}"
+  vpc_id            = "${module.vpc.id}"
+  network_acl_id    = "${module.vpc.network_acl_id}"
+  public_subnet_ids = "${module.vpc.public_subnet_ids}"
+  iam_user_groups   = "${local.workspace["bastion_user_group"]}"
+  iam_sudo_groups   = "${local.workspace["bastion_sudo_group"]}"
+  assume_role_arn   = "${element(matchkeys(data.terraform_remote_state.master.bastion_role_arns, keys(data.terraform_remote_state.master.sub_accounts), list(terraform.workspace)),0)}"
+}
+
+output "bastion_ip" {
+  value = "${module.bastion.public_ip}"
+}
+
+output "bastion_security_group_id" {
+  value = "${module.bastion.security_group_id}"
+}
+
+output "bastion_billing_suggestion" {
+  value = "${module.bastion.billing_suggestion}"
+}
+
+### Proxy
 
 
 ## Private Subnets
