@@ -2,17 +2,15 @@
 
 ## Accounts
 
-Name        | ID           | Root Email         |
-------------|--------------|--------------------|
-master      |              |                    |
-operations  |              |                    |
-production  |              |                    |
-staging     |              |                    |
-testing     |              |                    |
-development |              |                    |
-forensics   |              |                    |
-
-TODO add in suggested colours
+Name        | Account ID   | Colour | Root Email         |
+------------|--------------|--------|--------------------|
+master      |              |        |                    |
+operations  |              | Blue   |                    |
+production  |              | Red    |                    |
+staging     |              | Orange |                    |
+testing     |              | Yellow |                    |
+development |              | Green  |                    |
+forensics   |              | Purple |                    |
 
 ## Project Structure
 
@@ -43,6 +41,10 @@ ${project}-infrastructure
 
 ## Getting Started
 
+### Create Master Account 
+### Create Users
+### Setup 
+
 ### Installing CLIs
 ```bash
 $ brew install terraform
@@ -61,6 +63,8 @@ To create the AMIs, go to the respective subfolder (`/amis/*/`), edit the `varia
 ```bash
 $ packer build -var-file=variables.json ami.json
 ```
+
+See [docs](./docs/AMIs.md) for configuration and full documentation.
 
 ### Setup Terraform Workspaces
 To create the workspaces, go to the respective subfolder (`/environments/*/`), and run:
@@ -84,6 +88,9 @@ $ terraform workspace list
 ```bash
 $ npm run install:npm
 ```
+
+
+### Create Sub Account
 
 
 ## Switch Roles
@@ -155,7 +162,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 
 ## TODO / Roadmap
-- [ ] on commit lint `terraform fmt`
 - [ ] Setup Vault - http://www.singulariti.co/2018/03/30/tech-blog-hashicorp-stack-for-secrets-management/
 
 

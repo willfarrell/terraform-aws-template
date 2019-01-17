@@ -36,3 +36,39 @@ data "terraform_remote_state" "master" {
 //  roles             = "${var.roles}"
 //}
 
+# Roles
+resource "aws_iam_role" "admin" {
+  name = "admin"
+
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "AWS": "arn:aws:iam::${data.terraform_remote_state.master.account_id}:root"
+      },
+      "Effect": "Allow"
+    }
+  ]
+}
+POLICY
+}
+
+/*
+      "Condition": {
+        "Bool": {
+          "aws:MultiFactorAuthPresent": "${local.workspace["role_mfa"]}"
+        }
+      }
+*/
+
+resource "aws_iam_role_policy_attachment" "admin" {
+  role       = "${aws_iam_role.admin.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+output "admin_role_arn" {
+  value = "${aws_iam_role.admin.arn}"
+}
