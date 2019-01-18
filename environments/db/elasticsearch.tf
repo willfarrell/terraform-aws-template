@@ -1,4 +1,3 @@
-
 module "elasticsearch" {
   source = "git@github.com:tesera/terraform-modules//elasticsearch?ref=v0.2.9"
   name   = "${local.workspace["name"]}"

@@ -62,10 +62,11 @@ output "bastion_billing_suggestion" {
 ## Private Subnets
 
 resource "aws_vpc_endpoint" "s3" {
-  vpc_id            = "${module.vpc.id}"
-  service_name      = "com.amazonaws.${local.workspace["region"]}.s3"
-  route_table_ids   = ["${module.vpc.private_route_table_ids}"]
-  policy            = <<POLICY
+  vpc_id          = "${module.vpc.id}"
+  service_name    = "com.amazonaws.${local.workspace["region"]}.s3"
+  route_table_ids = ["${module.vpc.private_route_table_ids}"]
+
+  policy = <<POLICY
 {
   "Statement": [
       {
@@ -83,7 +84,8 @@ resource "aws_vpc_endpoint" "dynamodb" {
   vpc_id          = "${module.vpc.id}"
   service_name    = "com.amazonaws.${local.workspace["region"]}.dynamodb"
   route_table_ids = ["${module.vpc.private_route_table_ids}"]
-  policy          = <<POLICY
+
+  policy = <<POLICY
 {
     "Statement": [
         {

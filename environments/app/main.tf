@@ -46,7 +46,7 @@ module "app" {
     "${local.workspace["domain"]}",
   ]
 
-  acm_certificate_arn           = "${data.aws_acm_certificate.main.arn}"
-  web_acl_id                    = "${module.waf.id}"
-  lambda_viewer_response        = "${file("${path.module}/lambda-viewer-response.js")}"
+  acm_certificate_arn    = "${data.aws_acm_certificate.main.arn}"
+  web_acl_id             = "${module.waf.id}"
+  lambda_viewer_response = "${file("${path.module}/lambda-viewer-response.js")}"
 }

@@ -1,4 +1,3 @@
-
 # TODO setup users for DB access
 # TODO save password in Secrect Manager & rotate
 # TODO bug fix ssh_identity_file path issue
