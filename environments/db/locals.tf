@@ -6,85 +6,131 @@ locals {
       region = "us-west-2"
 
       # Cache
-      cache_instance_type  = "cache.t2.micro"
-      cache_engine         = "redis"
-      cache_engine_version = "4.0"
-      cache_read_replicas  = 0
+      redis_instance_type  = "cache.t2.micro"
+      redis_engine         = "redis"
+      redis_engine_version = "4.0"
 
-      # Elastic
-      elastic_instance_type  = "r4.large.elasticsearch"
-      elastic_engine_version = "6.3"
-      elastic_bootstrap_file = "${path.module}/elasticsearch/mappings.json"
+      # ElasticSearch
+      elasticsearch_instance_type  = "r4.large.elasticsearch"
+      elasticsearch_engine         = "elasticsearch"
+      elasticsearch_engine_version = "6.3"
+      elasticsearch_bootstrap_file = "${path.module}/elasticsearch/mappings.json"
 
       # RDS
-      rds_instance_type    = "db.t2.micro"
-      rds_replica_count    = 0
-      rds_db_name          = "onguard"
-      rds_bootstrap_folder = "${path.module}/mysql"
-      rds_engine_version   = "5.7"
+      mysql_instance_type    = "db.t2.micro"
+      mysql_replica_count    = 0
+      mysql_db_name          = "{**NAME**}"
+      mysql_bootstrap_folder = "${path.module}/mysql"
+      mysql_engine_version   = "5.7"
+      mysql_engine_mode      = "provisioned"
 
-      ## cluster
-      rds_engine_mode = "provisioned"
+      postgres_instance_type    = "db.t2.micro"
+      postgres_replica_count    = 0
+      postgres_db_name          = "{**NAME**}"
+      postgres_bootstrap_folder = "${path.module}/postgres"
+      postgres_engine_version   = "10"
+      postgres_engine_mode      = "provisioned"
+
     }
 
     production = {
-      multi_az                    = true
-      apply_immediately           = false
-      cache_type                  = "cluster"
-      cache_node_count            = 2
-      cache_replica_count         = 2
-      elastic_node_count          = 2
-      rds_type                    = "cluster"
-      rds_engine                  = "aurora-mysql"
-      rds_node_count              = 2
-      rds_replica_count           = 2
-      rds_allocated_storage       = 256
-      rds_backup_retention_period = 90
+      multi_az                         = true
+      apply_immediately                = false
+
+      redis_type                       = "cluster"
+      redis_node_count                 = 2
+      redis_replica_count              = 2
+
+      elasticsearch_node_count         = 2
+
+      mysql_type                       = "cluster"
+      mysql_engine                     = "aurora-mysql"
+      mysql_node_count                 = 2
+      mysql_replica_count              = 2
+      mysql_allocated_storage          = 256
+      mysql_backup_retention_period    = 90
+
+      postgres_type                    = "cluster"
+      postgres_engine                  = "aurora-postgres"
+      postgres_node_count              = 2
+      postgres_replica_count           = 2
+      postgres_allocated_storage       = 256
+      postgres_backup_retention_period = 90
     }
 
     staging = {
-      multi_az                    = true
-      apply_immediately           = false
-      cache_type                  = "cluster"
-      cache_node_count            = 2
-      cache_replica_count         = 1
-      elastic_node_count          = 2
-      rds_type                    = "cluster"
-      rds_engine                  = "aurora-mysql"
-      rds_node_count              = 2
-      rds_replica_count           = 1
-      rds_allocated_storage       = 64
-      rds_backup_retention_period = 30
+      multi_az                         = true
+      apply_immediately                = false
+
+      redis_type                       = "cluster"
+      redis_node_count                 = 2
+      redis_replica_count              = 1
+
+      elasticsearch_node_count         = 2
+
+      mysql_type                       = "cluster"
+      mysql_engine                     = "aurora-mysql"
+      mysql_node_count                 = 2
+      mysql_replica_count              = 1
+      mysql_allocated_storage          = 64
+      mysql_backup_retention_period    = 30
+
+      postgres_type                    = "cluster"
+      postgres_engine                  = "aurora-postgres"
+      postgres_node_count              = 2
+      postgres_replica_count           = 1
+      postgres_allocated_storage       = 64
+      postgres_backup_retention_period = 30
     }
 
     testing = {
-      multi_az                    = false
-      apply_immediately           = true
-      cache_type                  = "service"
-      cache_node_count            = 1
-      cache_replica_count         = 0
-      elastic_node_count          = 1
-      rds_type                    = "service"
-      rds_engine                  = "mysql"
-      rds_node_count              = 1
-      rds_replica_count           = 0
-      rds_allocated_storage       = 32
-      rds_backup_retention_period = 7
+      multi_az                         = false
+      apply_immediately                = true
+
+      redis_type                       = "service"
+      redis_node_count                 = 1
+      redis_replica_count              = 0
+
+      elasticsearch_node_count         = 1
+
+      mysql_type                       = "service"
+      mysql_engine                     = "mysql"
+      mysql_node_count                 = 1
+      mysql_replica_count              = 0
+      mysql_allocated_storage          = 32
+      mysql_backup_retention_period    = 7
+
+      postgres_type                    = "service"
+      postgres_engine                  = "postgres"
+      postgres_node_count              = 1
+      postgres_replica_count           = 0
+      postgres_allocated_storage       = 32
+      postgres_backup_retention_period = 7
     }
 
     development = {
-      multi_az                    = false
-      apply_immediately           = true
-      cache_type                  = "service"
-      cache_node_count            = 1
-      cache_replica_count         = 0
-      elastic_node_count          = 1
-      rds_type                    = "service"
-      rds_engine                  = "mysql"
-      rds_node_count              = 1
-      rds_replica_count           = 0
-      rds_allocated_storage       = 8
-      rds_backup_retention_period = 1
+      multi_az                         = false
+      apply_immediately                = true
+
+      redis_type                       = "service"
+      redis_node_count                 = 1
+      redis_replica_count              = 0
+
+      elasticsearch_node_count         = 1
+
+      mysql_type                       = "service"
+      mysql_engine                     = "mysql"
+      mysql_node_count                 = 1
+      mysql_replica_count              = 0
+      mysql_allocated_storage          = 8
+      mysql_backup_retention_period    = 1
+
+      postgres_type                    = "service"
+      postgres_engine                  = "postgres"
+      postgres_node_count              = 1
+      postgres_replica_count           = 0
+      postgres_allocated_storage       = 8
+      postgres_backup_retention_period = 1
     }
   }
 

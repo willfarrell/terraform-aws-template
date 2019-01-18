@@ -28,10 +28,10 @@ data "terraform_remote_state" "master" {
   backend = "s3"
 
   config = {
-    bucket  = "terraform-state-onguard"
+    bucket  = "terraform-state-${**NAME**}"
     key     = "master/account/terraform.tfstate"
     region  = "us-east-1"
-    profile = "sensnet"
+    profile = "${**PROFILE**}"
   }
 }
 
@@ -59,14 +59,40 @@ output "bastion_billing_suggestion" {
   value = "${module.bastion.billing_suggestion}"
 }
 
-### Proxy
-
-
 ## Private Subnets
-//resource "aws_vpc_endpoint" "s3" {
-//  vpc_id          = "${module.vpc.id}"
-//  service_name    = "com.amazonaws.${var.aws_region}.s3"
-//  route_table_ids = [
-//    "${module.vpc.private_route_table_ids}"]
-//}
 
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = "${module.vpc.id}"
+  service_name      = "com.amazonaws.${local.workspace["region"]}.s3"
+  route_table_ids   = ["${module.vpc.private_route_table_ids}"]
+  policy            = <<POLICY
+{
+  "Statement": [
+      {
+          "Action": "*",
+          "Effect": "Allow",
+          "Resource": "*",
+          "Principal": "*"
+      }
+  ]
+}
+POLICY
+}
+
+resource "aws_vpc_endpoint" "dynamodb" {
+  vpc_id          = "${module.vpc.id}"
+  service_name    = "com.amazonaws.${local.workspace["region"]}.dynamodb"
+  route_table_ids = ["${module.vpc.private_route_table_ids}"]
+  policy          = <<POLICY
+{
+    "Statement": [
+        {
+            "Action": "*",
+            "Effect": "Allow",
+            "Resource": "*",
+            "Principal": "*"
+        }
+    ]
+}
+POLICY
+}
