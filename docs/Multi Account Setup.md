@@ -1,19 +1,13 @@
-# Master Account Setup
+# Multi Account Setup
 
 ## Manual Steps
 1. Create Master Account *
-1. Must request from support to up the limit for Organizations / Number of Accounts to 6+ from 2
-1. Create `terraform` User *
-1. Services activation can take up to 24h.
-1. `terraform apply` `./master/state`
-1. `terraform apply` `./master/account`
-1. You should of received an `AWS Organizations email verification request`, Click `Verify your email address` in the email
-1. `terraform apply` `./master/users`
+1. Create Sub Accounts *
+1. Setup Master Account *
 1. Setup Login Account *
-1. Delete `terraform` User from account
 1. Setup Sub Accounts *
 
-\* See collection of steps below.
+\* See collection of re-usable steps below.
 
 ### Create Master Account
 See [How do I create and activate a new Amazon Web Services account?](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/)
@@ -26,7 +20,26 @@ See [How do I create and activate a new Amazon Web Services account?](https://aw
 1. Enter 4-digit code into your phone after picking up and press `Continue`.
 1. Press `Free`.
 1. Setup MFA *
-1. Add 
+1. Press `Add` .
+1. Services activation can take up to 24h.
+
+### Setup Master Account
+1. Create `terraform` User *
+1. `terraform apply` `./master/state`
+1. `terraform apply` `./master/account`
+1. Delete `terraform` User from account
+
+### Create Sub Accounts TODO
+1. Must request from support to up the limit for Organizations / Number of Accounts to 6+ from 2
+1. TODO Organizations -> ...
+1. You should of received an `AWS Organizations email verification request`, Click `Verify your email address` in the email
+
+### Setup Sub Accounts
+1. Set Sub Account Root Password (See [Accessing and Administering the Member Accounts in Your Organization](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html#orgs_manage_accounts_access-as-root))
+1. Create `terraform` User *
+1. `terraform apply` `./environments/account`
+1. Delete `terraform` User from account
+1. Repeat for each sub account
 
 ### Create `terraform` User
 1. Go to IAM.
@@ -34,17 +47,9 @@ See [How do I create and activate a new Amazon Web Services account?](https://aw
 1. Enter `User name` as `terraform`, check `Programmatic access` and press `Next: Permissions`.
 1. Press `Attach existing policies directly`, check `AdministratorAccess` and press `Next Review`.
 1. Press `Create user`.
-1. Copy `Access key ID` and `Secret access key` to `~/.aws/credentials` into `[username]`.
+1. Copy `Access key ID` and `Secret access key` to `~/.aws/credentials` into `[main]` or `[main-account]`.
 1. Press `Close`.
 
-
-### Setup Sub Accounts
-1. Set Sub Account Root Password (See [Accessing and Administering the Member Accounts in Your Organization](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html#orgs_manage_accounts_access-as-root))
-1. Add `terraform` user w/ admin policy and access keys
-1. `terraform apply` `./environments/state`
-1. `terraform apply` `./environments/account`
-1. Delete `terraform` User from account
-1. Repeat for each environments, operations, adn forensics accounts
 
 ### Setup Login Account
 1. Go to [AWS Console Login](https://console.aws.amazon.com/iam/home/) (https://${alias}.signin.aws.amazon.com/console)
@@ -52,8 +57,7 @@ See [How do I create and activate a new Amazon Web Services account?](https://aw
 1. Enter `Old Password`, `New password`, `Retype new password` and press `Confirm password change`.
 1. Got to [`IAM`](https://console.aws.amazon.com/iam/) if not already there.
 1. Setup MFA *
-1. Press `Create access key`.
-1. Replace `Access key ID` and `Secret access key` in `~/.aws/credentials` for `[username]` to new credentials.
+1. Create Access Keys *
 
 ### Create Access Keys
 1. Got to [`IAM`](https://console.aws.amazon.com/iam/home/) if not already there.

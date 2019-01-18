@@ -41,10 +41,6 @@ ${project}-infrastructure
 
 ## Getting Started
 
-### Create Master Account 
-### Create Users
-### Setup 
-
 ### Installing CLIs
 ```bash
 $ brew install terraform
@@ -56,15 +52,6 @@ $ brew install packer
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html)
 - [AWS SSM Plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html)
 - [AWS ECS CLI](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_installation.html)
-
-
-### Build AMIs
-To create the AMIs, go to the respective subfolder (`/amis/*/`), edit the `variables.json`, and run:
-```bash
-$ packer build -var-file=variables.json ami.json
-```
-
-See [docs](./docs/AMIs.md) for configuration and full documentation.
 
 ### Setup Terraform Workspaces
 To create the workspaces, go to the respective subfolder (`/environments/*/`), and run:
@@ -84,13 +71,21 @@ $ terraform workspace select development
 $ terraform workspace list
 ```
 
+### Setup Multi-Accounts
+See [docs](./docs/Multi Account Setup.md) for detailed steps.
+
+### Build AMIs
+To create the AMIs, go to the respective subfolder (`/amis/*/`), edit the `variables.json`, and run:
+```bash
+$ packer build -var-file=variables.json ami.json
+```
+
+See [docs](./docs/AMIs.md) for configuration and full documentation.
+
 ### Install node dependencies
 ```bash
 $ npm run install:npm
 ```
-
-
-### Create Sub Account
 
 
 ## Switch Roles
@@ -109,10 +104,8 @@ TODO add in `audit` role?
     - [ ] Users (Optional)
     - [ ] CloudTrail
     - [ ] Security Hub
-1. environment/bootstrap
-    - [x] admin role
 1. environment/account
-    - [ ] other roles (developer, operator, audit, etc)
+    - [ ] roles (admin, developer, operator, audit, etc)
     - [x] API Gateway Logs
     - [ ] CloudTrail
     - [ ] GuardDuty
@@ -120,11 +113,11 @@ TODO add in `audit` role?
     - [ ] Macie
 1. environment/vpc
     - [x] VPC
-    - [x] VPC Endpoints
+    - [x] VPC Endpoints (S3, DynamoDB)
     - [x] Bastion
 1. environment/db
-    - [x] RDS
-    - [x] ElasticCache
+    - [x] RDS (postgres,mysql)
+    - [x] ElasticCache (redis)
     - [x] ElasticSearch
 1. environment/api
     - [-] DynamoDB
