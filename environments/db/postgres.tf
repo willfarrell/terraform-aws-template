@@ -39,6 +39,22 @@ module "postgres" {
   #"${data.terraform_remote_state.api.ecs_security_group_id}",
 }
 
+resource "aws_ssm_parameter" "postgres_endpoint" {
+  name        = "/postgres/endpoint"
+  description = "PostgreSQL Endpoint"
+  type        = "SecureString"
+  value       = "${module.mysql.endpoint}"
+}
+
+resource "aws_ssm_parameter" "postgres_replica_endpoints" {
+  name        = "/postgres/replica_endpoints"
+  description = "PostgreSQL Replica Endpoint"
+  type        = "SecureString"
+  value       = "${join(",", module.postgres.replica_endpoints)}"
+}
+
+# TODO ssm user/pass
+
 output "postgres_endpoint" {
   value = "${module.postgres.endpoint}"
 }

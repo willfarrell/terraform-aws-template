@@ -98,10 +98,10 @@ TODO add in `audit` role?
 ## Terraform Apply Order
 1. master/state
 1. master/account
-    - [ ] Sub-Accounts / Organization (Optional)
+    - [ ] Sub-Accounts / Organization (Manual)
     - [x] Groups for sub account access
     - [x] Roles for sub accounts (bastion)
-    - [ ] Users (Optional)
+    - [ ] Users (Manual/Optional)
     - [ ] CloudTrail
     - [ ] Security Hub
 1. environment/account
@@ -121,12 +121,13 @@ TODO add in `audit` role?
     - [x] ElasticSearch
 1. environment/api
     - [-] DynamoDB
+    - [ ] ALB + ECS
     - [x] ECS
     - [ ] API Gateway
     - [ ] Events, SQS, SNS, Lambda, S3,
 1. environment/app
-    - [-] CloudFront
-    - [-] S3
+    - [x] CloudFront
+    - [x] S3
 1. environment/ops
     - [ ] CloudWatch Dashboards
 

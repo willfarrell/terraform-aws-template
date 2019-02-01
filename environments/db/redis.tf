@@ -23,6 +23,20 @@ module "redis" {
   #"${data.terraform_remote_state.api.ecs_security_group_id}",
 }
 
+resource "aws_ssm_parameter" "redis_endpoint" {
+  name        = "/redis/endpoint"
+  description = "redis Endpoint"
+  type        = "SecureString"
+  value       = "${module.mysql.endpoint}"
+}
+
+resource "aws_ssm_parameter" "redis_replica_endpoints" {
+  name        = "/redis/replica_endpoints"
+  description = "redis Replica Endpoint"
+  type        = "SecureString"
+  value       = "${join(",", module.redis.replica_endpoints)}"
+}
+
 output "redis_endpoint" {
   value = "${module.redis.endpoint}"
 }

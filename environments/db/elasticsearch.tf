@@ -25,6 +25,13 @@ module "elasticsearch" {
   ]
 }
 
+resource "aws_ssm_parameter" "elasticsearch_endpoint" {
+  name        = "/elasticsearch/endpoint"
+  description = "ElasticSearch Endpoint"
+  type        = "SecureString"
+  value       = "${module.elasticsearch.endpoint}"
+}
+
 output "elasticsearch_endpoint" {
   value = "${module.elasticsearch.endpoint}"
 }

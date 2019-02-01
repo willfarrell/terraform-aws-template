@@ -39,6 +39,22 @@ module "mysql" {
   #"${data.terraform_remote_state.api.ecs_security_group_id}",
 }
 
+resource "aws_ssm_parameter" "mysql_endpoint" {
+  name        = "/mysql/endpoint"
+  description = "MySQL Endpoint"
+  type        = "SecureString"
+  value       = "${module.mysql.endpoint}"
+}
+
+resource "aws_ssm_parameter" "mysql_replica_endpoints" {
+  name        = "/mysql/replica_endpoints"
+  description = "MySQL Replica Endpoint"
+  type        = "SecureString"
+  value       = "${join(",", module.mysql.replica_endpoints)}"
+}
+
+# TODO ssm user/pass
+
 output "mysql_endpoint" {
   value = "${module.mysql.endpoint}"
 }
