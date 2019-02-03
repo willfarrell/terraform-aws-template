@@ -23,6 +23,13 @@ module "redis" {
   #"${data.terraform_remote_state.api.ecs_security_group_id}",
 }
 
+resource "aws_ssm_parameter" "redis_arn" {
+  name        = "/redis/arn"
+  description = "redis ARN"
+  type        = "SecureString"
+  value       = "${module.mysql.arn}"
+}
+
 resource "aws_ssm_parameter" "redis_endpoint" {
   name        = "/redis/endpoint"
   description = "redis Endpoint"

@@ -1,7 +1,7 @@
 
-resource "aws_ssm_parameter" "vpc_id" {
-  name        = "/vpc/id"
-  description = "VPC ID"
+resource "aws_ssm_parameter" "vpc_security_group" {
+  name        = "/vpc/security_group"
+  description = "VPC Security Group"
   type        = "SecureString"
   value       = "${module.vpc.id}"
 }

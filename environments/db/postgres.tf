@@ -39,6 +39,13 @@ module "postgres" {
   #"${data.terraform_remote_state.api.ecs_security_group_id}",
 }
 
+resource "aws_ssm_parameter" "postgres_arn" {
+  name        = "/postgres/arn"
+  description = "PostgreSQL ARN"
+  type        = "SecureString"
+  value       = "${module.mysql.arn}"
+}
+
 resource "aws_ssm_parameter" "postgres_endpoint" {
   name        = "/postgres/endpoint"
   description = "PostgreSQL Endpoint"

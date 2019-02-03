@@ -39,6 +39,13 @@ module "mysql" {
   #"${data.terraform_remote_state.api.ecs_security_group_id}",
 }
 
+resource "aws_ssm_parameter" "mysql_arn" {
+  name        = "/mysql/arn"
+  description = "MySQL ARN"
+  type        = "SecureString"
+  value       = "${module.mysql.arn}"
+}
+
 resource "aws_ssm_parameter" "mysql_endpoint" {
   name        = "/mysql/endpoint"
   description = "MySQL Endpoint"
