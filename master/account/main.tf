@@ -1,10 +1,10 @@
 terraform {
   backend "s3" {
-    bucket         = "terraform-state-${**NAME**}"
+    bucket         = "terraform-state-{**NAME**}"
     key            = "master/account/terraform.tfstate"
     region         = "us-east-1"
-    profile        = "${**PROFILE**}"
-    dynamodb_table = "terraform-state-${**NAME**}"
+    profile        = "{**PROFILE**}"
+    dynamodb_table = "terraform-state-{**NAME**}"
   }
 }
 

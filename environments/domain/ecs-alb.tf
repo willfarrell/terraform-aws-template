@@ -2,7 +2,7 @@
 
 # Cert
 data "aws_acm_certificate" "alb" {
-  domain = "${local.workspace["domain"]}"
+  domain = local.workspace["domain"]
 
   statuses = [
     "ISSUED",

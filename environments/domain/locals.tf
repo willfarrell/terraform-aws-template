@@ -1,9 +1,9 @@
 locals {
   env = {
     default = {
-      env     = "${terraform.workspace}"
-      profile = "${**PROFILE**}"
-      name    = "${**NAME**}"
+      env     = terraform.workspace
+      profile = "{**PROFILE**}"
+      name    = "{**NAME**}"
       region  = "ca-central-1"
 
       # Database
@@ -21,14 +21,14 @@ locals {
       ## RDS
       mysql_instance_type    = "db.t2.micro"
       mysql_replica_count    = 0
-      mysql_db_name          = "${**NAME**}"
+      mysql_db_name          = "{**NAME**}"
       mysql_bootstrap_folder = "${path.module}/mysql"
       mysql_engine_version   = "8.0"
       mysql_engine_mode      = "provisioned"
 
       postgres_instance_type    = "db.t2.micro"
       postgres_replica_count    = 0
-      postgres_db_name          = "${**NAME**}"
+      postgres_db_name          = "{**NAME**}"
       postgres_bootstrap_folder = "${path.module}/postgres"
       postgres_engine_version   = "11"
       postgres_engine_mode      = "provisioned"
@@ -215,5 +215,9 @@ locals {
     }
   }
 
-  workspace = "${merge(local.env["default"], local.env[terraform.workspace])}"
+  workspace = merge(local.env["default"], local.env[terraform.workspace])
+}
+
+output "workspace" {
+  value = terraform.workspace
 }

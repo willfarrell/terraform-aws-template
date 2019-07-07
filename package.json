@@ -11,16 +11,15 @@
     "build:docker": "find . -name Dockerfile -exec bash -c \"echo $(dirname {})\"",
     "lint": "npm run lint:tf && npm run lint:js",
     "lint:tf": "terraform fmt",
-    "lint:js": "prettier-standard 'src/**/*.{js,json}'",
+    "lint:js": "prettier-standard './**/*.{js,json}'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^6.1.3",
-    "@commitlint/config-conventional": "^6.1.3",
-    "@commitlint/config-lerna-scopes": "^6.1.3",
-    "husky": "^1.1.1",
-    "lint-staged": "^7.3.0",
-    "prettier-standard-cli": "^11.0.6"
+    "@commitlint/cli": "8.0.0",
+    "@commitlint/config-conventional": "8.0.0",
+    "husky": "3.0.0",
+    "lint-staged": "9.1.0",
+    "prettier-standard-cli": "11.0.6"
   },
   "commitlint": {
     "extends": [

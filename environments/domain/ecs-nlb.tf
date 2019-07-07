@@ -2,7 +2,7 @@
 # NLB (optional)
 //module "nlb" {
 //  source = "../../modules/nlb"
-//  name   = "${local.workspace["name"]}"
+//  name   = local.workspace["name"]
 //  vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 //
 //  private_subnet_ids = [

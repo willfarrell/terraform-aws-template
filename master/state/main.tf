@@ -1,25 +1,25 @@
 variable "name" {
-  type = "string"
-  default = "${**NAME**}"
+  type = string
+  default = "{**NAME**}"
 }
 
 variable "profile" {
-  type = "string"
-  default = "${**PROFILE**}"
+  type = string
+  default = "{**PROFILE**}"
 }
 
 provider "aws" {
   region  = "us-east-1"
-  profile = "${var.profile}"
+  profile = var.profile
 }
 
 module "state" {
   source = "git@github.com:willfarrell/terraform-state-module?ref=v0.2.0"
-  name   = "${var.name}"
+  name   = var.name
 }
 
 output "backend_s3_dynamodb_table" {
-  value = "${module.state.dynamodb_table_id}"
+  value = module.state.dynamodb_table_id
 }
 
 output "backend_s3_region" {
@@ -27,9 +27,9 @@ output "backend_s3_region" {
 }
 
 output "backend_s3_bucket" {
-  value = "${module.state.s3_bucket_id}"
+  value = module.state.s3_bucket_id
 }
 
 output "backend_s3_bucket_logs" {
-  value = "${module.state.s3_bucket_logs_id}"
+  value = module.state.s3_bucket_logs_id
 }

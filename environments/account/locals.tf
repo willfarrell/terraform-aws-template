@@ -1,9 +1,9 @@
 locals {
   env = {
     default = {
-      env     = "${terraform.workspace}"
-      name    = "${**NAME**}"
-      profile = "${**PROFILE**}"
+      env     = terraform.workspace
+      name    = "{**NAME**}"
+      profile = "{**PROFILE**}"
       region  = "us-west-2"
     }
 
@@ -16,5 +16,9 @@ locals {
     development = {}
   }
 
-  workspace = "${merge(local.env["default"], local.env[terraform.workspace])}"
+  workspace = merge(local.env["default"], local.env[terraform.workspace])
+}
+
+output "workspace" {
+  value = terraform.workspace
 }
