@@ -9,36 +9,37 @@ terraform {
 }
 
 provider "aws" {
-  region  = "us-east-1"
-  profile = "${var.profile}"
+  region  = local.workspace['region']
+  profile = local.workspace['profile']
 }
-
-module "defaults" {
-  source = "git@github.com:tesera/terraform-modules//defaults?ref=v0.1.2"
-}
-
-//modules "master" { /* sub account generation */ }
 
 module "groups" {
-  source       = "git@github.com:tesera/terraform-modules//groups?ref=v0.1.3"
-  sub_accounts = "${var.sub_accounts}"
-
-  roles = [
-    "admin",
-  ]
+  source       = "git@github.com:willfarrell/terraform-account-modules//groups?ref=v0.0.1"
+  type         = "master"
+  sub_accounts = local.workspace['sub_accounts']
 }
 
-module "bastion_roles" {
-  source       = "git@github.com:tesera/terraform-modules//bastion-roles?ref=v0.1.4"
-  sub_accounts = "${var.sub_accounts}"
+module "roles" {
+  source       = "git@github.com:willfarrell/terraform-account-modules//roles?ref=v0.0.1"
+  type         = "master"
+  sub_accounts = local.workspace['sub_accounts']
 }
 
-//module "users" {
-//  source = "../../modules/users"
-//  users = {
-//    "will.farrell" = ["DevelopmentTerraform"]
-//    "test.a" = ["DevelopmentTerraform"]
-//    "test.b" = ["DevelopmentTerraform"]
-//  }
-//}
+# Output
+data "aws_caller_identity" "current" {}
 
+output "account_id" {
+  value = data.aws_caller_identity.current.account_id
+}
+
+output "sub_accounts" {
+  value = local.workspace['sub_accounts']
+}
+
+output "groups" {
+  value = module.groups.list
+}
+
+output "role_arns" {
+  value = module.roles.arns
+}

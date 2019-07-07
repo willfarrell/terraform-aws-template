@@ -4,7 +4,7 @@
 
 Name        | Account ID   | Colour | Root Email         |
 ------------|--------------|--------|--------------------|
-master      |              |        |                    |
+master      |              | ---    |                    |
 operations  |              | Blue   |                    |
 production  |              | Red    |                    |
 staging     |              | Orange |                    |
@@ -102,12 +102,12 @@ TODO add in `audit` role?
     - [x] Groups for sub account access
     - [x] Roles for sub accounts (bastion)
     - [ ] Users (Manual/Optional)
-    - [ ] CloudTrail
+    - [x] CloudTrail
     - [ ] Security Hub
 1. environment/account
     - [ ] roles (admin, developer, operator, audit, etc)
     - [x] API Gateway Logs
-    - [ ] CloudTrail
+    - [x] CloudTrail
     - [ ] GuardDuty
     - [ ] Inspector Agent
     - [ ] Macie
@@ -121,7 +121,7 @@ TODO add in `audit` role?
     - [x] ElasticSearch
 1. environment/api
     - [-] DynamoDB
-    - [ ] ALB + ECS
+    - [-] ALB + ECS
     - [x] ECS
     - [ ] API Gateway
     - [ ] Events, SQS, SNS, Lambda, S3,
@@ -141,12 +141,12 @@ TODO add in `audit` role?
 See Developer Guide (TODO add link)
 
 ## Versioning
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/tesera/terraform-modules/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/willfarrell/terraform-aws-template/tags).
 
 ## Authors
 - [will Farrell](https://github.com/willfarrell)
 
-See also the list of [contributors](https://github.com/tesera/terraform-modules/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/willfarrell/terraform-aws-template/contributors) who participated in this project.
 
 ## License
 

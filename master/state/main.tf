@@ -1,9 +1,11 @@
 variable "name" {
   type = "string"
+  default = "${**NAME**}"
 }
 
 variable "profile" {
   type = "string"
+  default = "${**PROFILE**}"
 }
 
 provider "aws" {
@@ -12,7 +14,7 @@ provider "aws" {
 }
 
 module "state" {
-  source = "git@github.com:willfarrell/terraform-state-module"
+  source = "git@github.com:willfarrell/terraform-state-module?ref=v0.2.0"
   name   = "${var.name}"
 }
 

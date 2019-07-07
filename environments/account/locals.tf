@@ -1,9 +1,10 @@
 locals {
   env = {
     default = {
-      env    = "${terraform.workspace}"
-      name   = "${**NAME**}"
-      region = "us-west-2"
+      env     = "${terraform.workspace}"
+      name    = "${**NAME**}"
+      profile = "${**PROFILE**}"
+      region  = "us-west-2"
     }
 
     production = {}
