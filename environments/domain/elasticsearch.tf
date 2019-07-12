@@ -1,5 +1,5 @@
 module "elasticsearch" {
-  source = "git@github.com:willfarrell/terraform-db-modules//elasticsearch?ref=v0.2.9"
+  source = "git@github.com:willfarrell/terraform-db-modules//elasticsearch?ref=v0.0.1"
   name   = local.workspace["name"]
   vpc_id = module.vpc.vpc_id
 

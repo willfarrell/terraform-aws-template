@@ -8,7 +8,7 @@ output "ecs_repository_url" {
 }
 
 module "ecs" {
-  source = "git@github.com:willfarrell/terraform-ec-modules//ecs?ref=v0.2.7"
+  source = "git@github.com:willfarrell/terraform-ec-modules//ecs?ref=v0.0.1"
   name   = local.workspace["name"]
   vpc_id = module.vpc.vpc_id
 
@@ -35,7 +35,7 @@ output "ecs_billing_suggestion" {
 
 # EFS
 module "efs" {
-  source = "git@github.com:willfarrell/terraform-ec-modules//efs?ref=v0.2.4"
+  source = "git@github.com:willfarrell/terraform-ec-modules//efs?ref=v0.0.1"
   name   = "${local.workspace["name"]}-ecs"
 
   subnet_ids = module.vpc.private_subnet_ids

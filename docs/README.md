@@ -4,8 +4,7 @@
 
 Name        | Account ID   | Colour | Root Email         |
 ------------|--------------|--------|--------------------|
-master      |              | ---    |                    |
-operations  |              | Blue   |                    |
+master      |              | ------ |                    |
 production  |              | Red    |                    |
 staging     |              | Orange |                    |
 testing     |              | Yellow |                    |
@@ -18,28 +17,19 @@ forensics   |              | Purple |                    |
 ${project}-infrastructure
 |-- package.json	# Script shortcuts (lint, install, deploy, test) & versioning?
 |-- amis            # Collection of AMIs, built by Packer
-|   |-- {name}      # AMI files
+|   |-- {name}      # AMI folders, ie bastion, ecs, nat or custom ones
 |-- master			# Setup for root level account
 |   |-- state		# Sets up state management for terraform
 |   |-- account     # Account setup (Groups, Monitoring)
-|   |-- users		# IAM Users
-|-- operations		# Setup for operation pieces
-|   |-- account     # Account setup (Roles, Monitoring)
-|   |-- cicd		# Jenkins
-|   |-- dns			# Route53
-|   |-- logging		# ELK & CloudWatch
-|   |-- secrets		# HashiCorp Vault
+|   |-- operations	# Setup for operation pieces
 |-- environments
 |   |-- account     # Account setup (Roles, Monitoring)
-|   |-- app			# Public static assets
-|   |-- api			# Public/Private API endpoints and support infrastructure (cache, events, lambda)
-|   |-- db			# Databases
-|   |-- ops     	# Ops dashboards
-|   |-- vpc			# VPC & Networking
+|   |-- domain		# Domain specific VPC, App, API, ECS, etc. Rename folder to `name`.
 |-- modules			# Collection of project specific modules
 ```
 
 ## Getting Started
+For up to date documentation and modules see [terraform-aws-template](https://github.com/willfarrell/terraform-aws-template).
 
 ### Installing CLIs
 ```bash
@@ -89,11 +79,10 @@ $ npm run install:npm
 
 
 ## Switch Roles
-- `admin`
-- `developer`
+- `admin`: Full Read/Write Access
+- `developer`: Full Read Only Access
 
-TODO complete policy for developer
-TODO add in `audit` role?
+It is recommended that the `account/roles` module be forks to customized to specific needs
 
 ## Terraform Apply Order
 1. master/state
@@ -111,26 +100,22 @@ TODO add in `audit` role?
     - [ ] GuardDuty
     - [ ] Inspector Agent
     - [ ] Macie
-1. environment/vpc
+1. environment/domain
     - [x] VPC
     - [x] VPC Endpoints (S3, DynamoDB)
     - [x] Bastion
-1. environment/db
     - [x] RDS (postgres,mysql)
     - [x] ElasticCache (redis)
     - [x] ElasticSearch
-1. environment/api
-    - [-] DynamoDB
-    - [-] ALB + ECS
+    - [x] DynamoDB
+    - [x] ALB + ECS
+    - [x] NLB + ECS
     - [x] ECS
     - [ ] API Gateway
     - [ ] Events, SQS, SNS, Lambda, S3,
-1. environment/app
     - [x] CloudFront
     - [x] S3
-1. environment/ops
     - [ ] CloudWatch Dashboards
-
 
 ## Built With
 - [Terraform](https://www.terraform.io/)
@@ -153,11 +138,4 @@ See also the list of [contributors](https://github.com/willfarrell/terraform-aws
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
-
-
-## TODO / Roadmap
-- [ ] Setup Vault - http://www.singulariti.co/2018/03/30/tech-blog-hashicorp-stack-for-secrets-management/
-
-
-
 

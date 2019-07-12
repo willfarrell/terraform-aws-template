@@ -9,6 +9,7 @@ module "vpc" {
   nat_type   = local.workspace["nat_type"]
 }
 
+# used for serverless
 resource "aws_ssm_parameter" "vpc_security_group" {
   name        = "/vpc/security_group"
   description = "VPC Security Group"

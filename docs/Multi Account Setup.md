@@ -16,7 +16,7 @@ See [How do I create and activate a new Amazon Web Services account?](https://aw
 1. Enter `Email` (aws+master@example.com), `Password`, `Confirm Password`, `AWS account name` (master) and press `Continue`.
 1. Enter `Account type` (Professional), remaining fields and press `Create Account and Continue`.
 1. Enter payment information and press `Secure Submit`.
-1. Enter `Securitty Check` and press `Call me now`.
+1. Enter `Security Check` and press `Call me now`.
 1. Enter 4-digit code into your phone after picking up and press `Continue`.
 1. Press `Free`.
 1. Setup MFA *
@@ -31,8 +31,10 @@ See [How do I create and activate a new Amazon Web Services account?](https://aw
 
 ### Create Sub Accounts TODO
 1. Must request from support to up the limit for Organizations / Number of Accounts to 6+ from 2
-1. TODO Organizations -> ...
+1. Organizations -> `Create Organization`
 1. You should of received an `AWS Organizations email verification request`, Click `Verify your email address` in the email
+1. Press `Add Account`
+1. `Create Account` -> Enter Name, email
 
 ### Setup Sub Accounts
 1. Set Sub Account Root Password (See [Accessing and Administering the Member Accounts in Your Organization](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html#orgs_manage_accounts_access-as-root))

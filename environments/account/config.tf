@@ -34,8 +34,8 @@ module "edge-logs" {
 # Primary Region
 
 module "region-logs" {
-  #source = "git@github.com:willfarrell/terraform-s3-logs-module?ref=v0.5.2"
-  source         = "../../../../../github/terraform-s3-logs-module"
+  #source = "git@github.com:willfarrell/terraform-logs-module?ref=v0.5.2"
+  source         = "../../../../../github/terraform-logs-module"
   name   = "${local.workspace["name"]}-${local.workspace["env"]}-${local.workspace["region"]}"
   tags = {
     Name = "${local.workspace["region"]} Logs"

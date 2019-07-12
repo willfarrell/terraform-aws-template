@@ -12,10 +12,10 @@ const headers = {
     // Content-Security-Policy-Report-Only: https://${username}.report-uri.com/r/d/csp/reportOnly
     // Content-Security-Policy:             https://${username}.report-uri.com/r/d/csp/enforce
     'Content-Security-Policy-Report-Only': 'default-src \'none\';' +
-      ' img-src \'self\';' +
-      ' script-src \'self\';' +
-      ' style-src \'self\';' +
-      ' connect-src \'self\';' +
+      ' img-src \'none\';' +
+      ' script-src \'none\';' +
+      ' style-src \'none\';' +
+      ' connect-src \'none\';' +
       ' base-uri \'none\';' +
       ' frame-ancestors \'none\';' +
       ' block-all-mixed-content;' +

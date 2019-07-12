@@ -30,7 +30,7 @@
 
 # ECS - For long running and batch processes
 module "ecs_nlb" {
-  source = "git@github.com:willfarrell/terraform-ec-modules//ecs?ref=v0.2.7"
+  source = "git@github.com:willfarrell/terraform-ec-modules//ecs?ref=v0.0.1"
   name   = "${local.workspace["name"]}-nlb"
   vpc_id = module.vpc.vpc_id
 
@@ -57,7 +57,7 @@ output "ecs_nlb_billing_suggestion" {
 
 # EFS
 module "efs_private" {
-  source = "git@github.com:willfarrell/terraform-ec-modules//efs?ref=v0.2.4"
+  source = "git@github.com:willfarrell/terraform-ec-modules//efs?ref=v0.0.1"
   name   = "${local.workspace["name"]}-ecs-nlb"
 
   subnet_ids = module.vpc.private_subnet_ids

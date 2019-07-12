@@ -6,6 +6,9 @@ locals {
       name    = "{**NAME**}"
       region  = "ca-central-1"
 
+      # VPC
+      az_count             = 2
+
       # Database
       ## Cache
       redis_instance_type  = "cache.t2.micro"
@@ -49,7 +52,7 @@ locals {
 
       # VPC
       cidr_block            = "10.*.0.0/16"
-      az_count              = "3"
+      az_count              = 3
       nat_type              = "gateway"
       bastion_instance_type = "t2.micro"
       bastion_user_group    = "User"
@@ -95,7 +98,7 @@ locals {
 
       # VPC
       cidr_block            = "10.*.0.0/16"
-      az_count              = "2"
+      az_count              = 2
       nat_type              = "gateway"
       bastion_instance_type = "t2.micro"
       bastion_user_group    = "User"
@@ -139,7 +142,7 @@ locals {
 
       # VPC
       cidr_block            = "10.*.0.0/16"
-      az_count              = "2"
+      az_count              = 2
       nat_type              = "instance"
       bastion_instance_type = "t2.micro"
       bastion_user_group    = "User"
@@ -183,7 +186,7 @@ locals {
 
       # VPC
       cidr_block            = "10.8.0.0/16"
-      az_count              = "2"
+      az_count              = 2
       nat_type              = "instance"
       bastion_instance_type = "t2.micro"
       bastion_user_group    = "User"

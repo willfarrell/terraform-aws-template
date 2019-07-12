@@ -5,7 +5,7 @@
 
 
 module "postgres" {
-  source = "git@github.com:willfarrell/terraform-db-modules//rds?ref=v0.3.8"
+  source = "git@github.com:willfarrell/terraform-db-modules//rds?ref=v0.0.1"
   name   = local.workspace["name"]
   vpc_id = module.vpc.vpc_id
 

@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 module "state" {
-  source = "git@github.com:willfarrell/terraform-state-module?ref=v0.2.0"
+  source = "git@github.com:willfarrell/terraform-state-module?ref=v0.2.1"
   name   = var.name
 }
 
@@ -28,8 +28,4 @@ output "backend_s3_region" {
 
 output "backend_s3_bucket" {
   value = module.state.s3_bucket_id
-}
-
-output "backend_s3_bucket_logs" {
-  value = module.state.s3_bucket_logs_id
 }

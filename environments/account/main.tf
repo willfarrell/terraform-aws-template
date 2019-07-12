@@ -9,6 +9,8 @@ terraform {
   }
 }
 
+# On first run have terraform user creds attached to profile
+# change credentials for assume role for future runs
 provider "aws" {
   profile = "${local.workspace["profile"]}-${local.workspace["env"]}"
   region  = local.workspace["region"]
