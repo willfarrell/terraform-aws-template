@@ -6,12 +6,9 @@ locals {
       name    = "{**NAME**}"
       region  = "us-east-1"
 
-      sub_accounts = {
-        production  = "000000000000"
-        staging     = "000000000000"
-        testing     = "000000000000"
-        development = "000000000000"
-      }
+      account_email = "aws-root@example.com"
+
+      sub_accounts = ["production","staging","testing","development"]
     }
   }
 

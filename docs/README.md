@@ -84,22 +84,29 @@ $ npm run install:npm
 
 It is recommended that the `account/roles` module be forks to customized to specific needs
 
+## Manual Steps
+- [Well-Architected Tool](https://aws.amazon.com/well-architected-tool/)
+- [Trust Advisor](https://aws.amazon.com/premiumsupport/technology/trusted-advisor/)
+- [Macie](https://docs.aws.amazon.com/macie/latest/userguide/macie-setting-up.html#macie-setting-up-enable)
+
 ## Terraform Apply Order
 1. master/state
 1. master/account
-    - [ ] Sub-Accounts / Organization (Manual)
+    - [ ] Users (Manual)
+    - [ ] Macie (Manual)
+    - [x] Sub-Accounts / Organization
     - [x] Groups for sub account access
-    - [x] Roles for sub accounts (bastion)
-    - [ ] Users (Manual/Optional)
+    - [x] Roles for sub accounts (bastion, ECR)
     - [x] CloudTrail
+    - [x] GuardDuty
     - [ ] Security Hub
 1. environment/account
-    - [ ] roles (admin, developer, operator, audit, etc)
+    - [ ] Roles (admin, developer, operator, audit, etc)
     - [x] API Gateway Logs
     - [x] CloudTrail
-    - [ ] GuardDuty
+    - [x] GuardDuty
     - [ ] Inspector Agent
-    - [ ] Macie
+    - [ ] Macie (Manual)
 1. environment/domain
     - [x] VPC
     - [x] VPC Endpoints (S3, DynamoDB)

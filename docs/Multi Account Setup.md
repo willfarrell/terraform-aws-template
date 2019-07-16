@@ -29,7 +29,8 @@ See [How do I create and activate a new Amazon Web Services account?](https://aw
 1. `terraform apply` `./master/account`
 1. Delete `terraform` User from account
 
-### Create Sub Accounts TODO
+### Create Sub Accounts
+If `terraform` is unsuccessful.
 1. Must request from support to up the limit for Organizations / Number of Accounts to 6+ from 2
 1. Organizations -> `Create Organization`
 1. You should of received an `AWS Organizations email verification request`, Click `Verify your email address` in the email
@@ -83,7 +84,7 @@ aws_secret_access_key = secret_access_key
 ### Setup `Switch Role` in Console
 1. From account drop down choose `Switch Role`.
 1. Press `Switch Role`.
-1. Enter `Account` (ID), `Role`, `Display Name` and press `Switch Role`.
+1. Enter `Account` (ID), `Role` (`OrganizationAccountAccessRole` or a custom on created), `Display Name` and press `Switch Role`.
 
 ### Setup `Assume Role` in CLI
 Update `~/.aws/credentials`:

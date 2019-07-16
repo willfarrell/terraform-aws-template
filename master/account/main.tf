@@ -9,12 +9,12 @@ terraform {
 }
 
 provider "aws" {
-  profile = "${local.workspace["profile"]}-${local.workspace["env"]}"
+  profile = local.workspace["profile"]
   region  = local.workspace["region"]
 }
 
 provider "aws" {
-  profile = "${local.workspace["profile"]}-${local.workspace["env"]}"
+  profile = local.workspace["profile"]
   region  = "us-east-1"
   alias   = "edge"
 }
@@ -24,8 +24,4 @@ data "aws_caller_identity" "current" {}
 
 output "account_id" {
   value = data.aws_caller_identity.current.account_id
-}
-
-output "sub_accounts" {
-  value = local.workspace["sub_accounts"]
 }
