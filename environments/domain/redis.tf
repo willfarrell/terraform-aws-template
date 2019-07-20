@@ -1,7 +1,7 @@
 module "redis" {
   source = "git@github.com:willfarrell/terraform-db-modules//elasticache?ref=v0.0.1"
   name   = local.workspace["name"]
-  vpc_id = module.vpc.vpc_id
+  vpc_id = module.vpc.id
 
   private_subnet_ids = module.vpc.private_subnet_ids
 
@@ -15,10 +15,10 @@ module "redis" {
   engine         = local.workspace["redis_engine"]
   engine_version = local.workspace["redis_engine_version"]
 
-  security_group_ids = []
-
-  #"${data.terraform_remote_state.vpc.bastion_security_group_id}",
-  #"${data.terraform_remote_state.api.ecs_security_group_id}",
+  security_group_ids = [
+    #module.bastion.security_group_id,
+    #module.ecs.security_group_id,
+  ]
 }
 
 # SSM
@@ -33,7 +33,7 @@ resource "aws_ssm_parameter" "redis_endpoints" {
   name        = "/database/redis/endpoints"
   description = "Endpoints to connect to read the database"
   type        = "SecureString"
-  value       = join(",",module.redis.replica_endpoints)
+  value       = join(",", module.redis.replica_endpoints)
 }
 
 resource "aws_ssm_parameter" "redis_port" {

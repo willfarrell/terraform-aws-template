@@ -1,10 +1,10 @@
 variable "name" {
-  type = string
+  type    = string
   default = "{**NAME**}"
 }
 
 variable "profile" {
-  type = string
+  type    = string
   default = "{**PROFILE**}"
 }
 

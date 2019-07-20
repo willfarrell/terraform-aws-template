@@ -1,23 +1,20 @@
 terraform {
   backend "s3" {
     bucket         = "terraform-state-{**NAME**}"
-    key            = "account/terraform.tfstate"
+    key            = "master/operations/terraform.tfstate"
     region         = "us-east-1"
     profile        = "{**PROFILE**}"
     dynamodb_table = "terraform-state-{**NAME**}"
-    encrypt        = true
   }
 }
 
-# On first run have terraform user creds attached to profile
-# change credentials for assume role for future runs
 provider "aws" {
-  profile = "${local.workspace["profile"]}-${local.workspace["env"]}"
+  profile = local.workspace["profile"]
   region  = local.workspace["region"]
 }
 
 provider "aws" {
-  profile = "${local.workspace["profile"]}-${local.workspace["env"]}"
+  profile = local.workspace["profile"]
   region  = "us-east-1"
   alias   = "edge"
 }

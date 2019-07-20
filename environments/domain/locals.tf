@@ -7,7 +7,7 @@ locals {
       region  = "ca-central-1"
 
       # VPC
-      az_count             = 2
+      az_count = 2
 
       # Database
       ## Cache
@@ -185,7 +185,7 @@ locals {
       api_domain       = "dev-api.example.com"
 
       # VPC
-      cidr_block            = "10.8.0.0/16"
+      cidr_block            = "10.*.0.0/16"
       az_count              = 2
       nat_type              = "instance"
       bastion_instance_type = "t2.micro"

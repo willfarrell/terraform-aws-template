@@ -7,7 +7,7 @@
 module "postgres" {
   source = "git@github.com:willfarrell/terraform-db-modules//rds?ref=v0.0.1"
   name   = local.workspace["name"]
-  vpc_id = module.vpc.vpc_id
+  vpc_id = module.vpc.id
 
   private_subnet_ids = module.vpc.private_subnet_ids
 
@@ -28,13 +28,17 @@ module "postgres" {
   allocated_storage       = local.workspace["postgres_allocated_storage"]
   backup_retention_period = local.workspace["postgres_backup_retention_period"]
 
+  bastion_ip = module.bastion.public_ip
+
   # bootstrap
-  ssh_username      = "iam.username"
-  ssh_identity_file = "~/.ssh/id_rsa"
-  bastion_ip        = module.vpc.bastion_ip
-
+  #ssh_username      = "iam.username"
+  #ssh_identity_file = "~/.ssh/id_rsa"
   #bootstrap_folder        = "${local.workspace["postgres_bootstrap_folder"]}"
-  security_group_ids = []
+
+  security_group_ids = [
+    #module.bastion.security_group_id,
+    #module.ecs.security_group_id,
+  ]
 }
 
 # SSM
@@ -49,7 +53,7 @@ resource "aws_ssm_parameter" "postgres_endpoints" {
   name        = "/database/postgres/endpoints"
   description = "Endpoints to connect to read the database"
   type        = "SecureString"
-  value       = join(",",module.postgres.replica_endpoints)
+  value       = join(",", module.postgres.replica_endpoints)
 }
 
 resource "aws_ssm_parameter" "postgres_port" {
@@ -67,50 +71,7 @@ resource "aws_ssm_parameter" "postgres_username" {
 }
 
 resource "aws_ssm_parameter" "postgres_password" {
-  name        = "/database/postgres/username"
-  description = "Username to connect to the database"
-  type        = "SecureString"
-  value       = module.postgres.password
-}
-
-resource "aws_ssm_parameter" "postgres_database" {
-  name        = "/database/postgres/database"
-  description = "Database to connect to"
-  type        = "SecureString"
-  value       = module.postgres.database
-}
-
-# SSM
-resource "aws_ssm_parameter" "postgres_endpoint" {
-  name        = "/database/postgres/endpoint"
-  description = "Endpoint to connect to the database"
-  type        = "SecureString"
-  value       = module.postgres.endpoint
-}
-
-resource "aws_ssm_parameter" "postgres_endpoints" {
-  name        = "/database/postgres/endpoints"
-  description = "Endpoints to connect to read the database"
-  type        = "SecureString"
-  value       = join(",",module.postgres.replica_endpoints)
-}
-
-resource "aws_ssm_parameter" "postgres_port" {
-  name        = "/database/postgres/port"
-  description = "Port to connect to the database"
-  type        = "SecureString"
-  value       = module.postgres.port
-}
-
-resource "aws_ssm_parameter" "postgres_username" {
-  name        = "/database/postgres/username"
-  description = "Username to connect to the database"
-  type        = "SecureString"
-  value       = module.postgres.username
-}
-
-resource "aws_ssm_parameter" "postgres_password" {
-  name        = "/database/postgres/username"
+  name        = "/database/postgres/password"
   description = "Username to connect to the database"
   type        = "SecureString"
   value       = module.postgres.password

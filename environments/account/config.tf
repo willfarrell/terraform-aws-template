@@ -1,5 +1,4 @@
-
-# TODO add roles module
+# Edge Region
 
 module "api-gateway" {
   #source = "git@github.com:willfarrell/terraform-account-modules//api-gateway?ref=v0.0.1"
@@ -21,7 +20,7 @@ module "cloudtrail" {
 
 module "edge-logs" {
   #source = "git@github.com:willfarrell/terraform-logs-module?ref=v0.5.2"
-  source         = "../../../../../github/terraform-logs-module"
+  source = "../../../../../github/terraform-logs-module"
   name   = "${local.workspace["name"]}-${local.workspace["env"]}-edge"
   providers = {
     aws = aws.edge
@@ -35,7 +34,7 @@ module "edge-logs" {
 
 module "region-logs" {
   #source = "git@github.com:willfarrell/terraform-logs-module?ref=v0.5.2"
-  source         = "../../../../../github/terraform-logs-module"
+  source = "../../../../../github/terraform-logs-module"
   name   = "${local.workspace["name"]}-${local.workspace["env"]}-${local.workspace["region"]}"
   tags = {
     Name = "${local.workspace["region"]} Logs"

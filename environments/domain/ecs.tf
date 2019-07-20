@@ -1,16 +1,8 @@
-
-resource "aws_ecr_repository" "ecs" {
-  name = local.workspace["name"]
-}
-
-output "ecs_repository_url" {
-  value = aws_ecr_repository.ecs.repository_url
-}
-
 module "ecs" {
-  source = "git@github.com:willfarrell/terraform-ec-modules//ecs?ref=v0.0.1"
-  name   = local.workspace["name"]
-  vpc_id = module.vpc.vpc_id
+  source         = "git@github.com:willfarrell/terraform-ec-modules//ecs?ref=v0.0.3"
+  name           = local.workspace["name"]
+  ami_account_id = data.terraform_remote_state.master.outputs.account_id
+  vpc_id         = module.vpc.id
 
   private_subnet_ids = module.vpc.private_subnet_ids
 
@@ -35,7 +27,7 @@ output "ecs_billing_suggestion" {
 
 # EFS
 module "efs" {
-  source = "git@github.com:willfarrell/terraform-ec-modules//efs?ref=v0.0.1"
+  source = "git@github.com:willfarrell/terraform-ec-modules//efs?ref=v0.0.3"
   name   = "${local.workspace["name"]}-ecs"
 
   subnet_ids = module.vpc.private_subnet_ids
@@ -43,3 +35,4 @@ module "efs" {
 
 # TODO sg - allow proxy access from bastion to private ports
 
+# TODO task def

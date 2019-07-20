@@ -1,4 +1,5 @@
 # Infrastructure
+Visit [`willfarrell/terraform-aws-template`](https://github.com/willfarrell/terraform-aws-template) for the latest improvements and most up to date documentation.
 
 ## Accounts
 
@@ -9,6 +10,7 @@ production  |              | Red    |                    |
 staging     |              | Orange |                    |
 testing     |              | Yellow |                    |
 development |              | Green  |                    |
+operations  |              | Blue   |                    |
 forensics   |              | Purple |                    |
 
 ## Project Structure
@@ -77,10 +79,8 @@ See [docs](./docs/AMIs.md) for configuration and full documentation.
 $ npm run install:npm
 ```
 
-
 ## Switch Roles
-- `admin`: Full Read/Write Access
-- `developer`: Full Read Only Access
+- `OrganizationAccountAccessRole`: Admin Access
 
 It is recommended that the `account/roles` module be forks to customized to specific needs
 
@@ -89,24 +89,55 @@ It is recommended that the `account/roles` module be forks to customized to spec
 - [Trust Advisor](https://aws.amazon.com/premiumsupport/technology/trusted-advisor/)
 - [Macie](https://docs.aws.amazon.com/macie/latest/userguide/macie-setting-up.html#macie-setting-up-enable)
 
-## Terraform Apply Order
+## Deployment Steps
+1. Build an AMIs that will be needed
+```bash
+packer build -var-file=variables.json ami.json
+```
+
 1. master/state
+
 1. master/account
     - [ ] Users (Manual)
     - [ ] Macie (Manual)
     - [x] Sub-Accounts / Organization
     - [x] Groups for sub account access
     - [x] Roles for sub accounts (bastion, ECR)
+    - [x] AMI permissions
     - [x] CloudTrail
     - [x] GuardDuty
     - [ ] Security Hub
+
+1. Switch Roles into each sub-account using `OrganizationAccountAccessRole`. Create a `terraform` user to bootstrap assume roles.
+Be sure to delete the user after you bootstrap
+
+1. Setup `terraform` workspaces
+Run the following in each `environments` folder
+```bash
+terraform workspace new production
+terraform workspace new staging
+terraform workspace new testing
+terraform workspace new development
+terraform workspace select ${sub_account_name}
+```
+
 1. environment/account
-    - [ ] Roles (admin, developer, operator, audit, etc)
+    - [x] Roles (admin, developer, operator, audit, etc)
     - [x] API Gateway Logs
     - [x] CloudTrail
     - [x] GuardDuty
     - [ ] Inspector Agent
     - [ ] Macie (Manual)
+
+1. At this point you'll need to update your AWS credentials.
+Update `~/.aws/credentials`:
+```bash
+[${profile}-${sub_account_name}]
+source_profile = ${profile}
+role_arn = arn:aws:iam::${sub_account_id}:role/admin
+session_name = ${profile}-${sub_account_name}
+```
+
 1. environment/domain
     - [x] VPC
     - [x] VPC Endpoints (S3, DynamoDB)
@@ -128,6 +159,18 @@ It is recommended that the `account/roles` module be forks to customized to spec
 - [Terraform](https://www.terraform.io/)
 - [Packer](https://www.packer.io/)
 - [NodeJS](https://nodejs.org/en/)
+
+### Modules
+- [state module](https://github.com/willfarrell/terraform-state-module)
+- [account modules](https://github.com/willfarrell/terraform-account-modules)
+- [logs module](https://github.com/willfarrell/terraform-logs-module)
+- [VPC module](https://github.com/willfarrell/terraform-vpc-module)
+- [DB modules](https://github.com/willfarrell/terraform-db-modules)
+- [EC modules](https://github.com/willfarrell/terraform-ec-modules)
+- [WAF module](https://github.com/willfarrell/terraform-waf-module)
+- [LB module](https://github.com/willfarrell/terraform-lb-module)
+- [IdP module](https://github.com/willfarrell/terraform-idp-module) - TODO
+- [CDN module](https://github.com/willfarrell/terraform-public-static-assets-module)
 
 ## Contributing
 See Developer Guide (TODO add link)

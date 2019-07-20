@@ -5,10 +5,6 @@ locals {
       profile = "{**PROFILE**}"
       name    = "{**NAME**}"
       region  = "ca-central-1"
-
-      account_email = "aws-root@example.com"
-
-      sub_accounts = ["production", "staging", "testing", "development"]
     }
   }
 

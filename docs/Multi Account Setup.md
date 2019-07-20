@@ -84,14 +84,14 @@ aws_secret_access_key = secret_access_key
 ### Setup `Switch Role` in Console
 1. From account drop down choose `Switch Role`.
 1. Press `Switch Role`.
-1. Enter `Account` (ID), `Role` (`OrganizationAccountAccessRole` or a custom on created), `Display Name` and press `Switch Role`.
+1. Enter `Account` (ID), `Role` (`OrganizationAccountAccessRole`,`admin`,`developer`), `Display Name` and press `Switch Role`.
 
 ### Setup `Assume Role` in CLI
 Update `~/.aws/credentials`:
 ```bash
 [main-environment]
 source_profile = main
-role_arn = arn:aws:iam:${account_id}:role/admin
+role_arn = arn:aws:iam::${account_id}:role/admin
 session_name = main-environment
 ```
 

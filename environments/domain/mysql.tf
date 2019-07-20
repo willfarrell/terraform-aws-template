@@ -32,7 +32,8 @@ module "mysql" {
 
   #bootstrap_folder        = "${local.workspace["mysql_bootstrap_folder"]}"
   security_group_ids = [
-    module.bastion.security_group_id
+    #module.bastion.security_group_id,
+    #module.ecs.security_group_id,
   ]
 }
 
@@ -48,7 +49,7 @@ resource "aws_ssm_parameter" "mysql_endpoints" {
   name        = "/database/mysql/endpoints"
   description = "Endpoints to connect to read the database"
   type        = "SecureString"
-  value       = join(",",module.mysql.replica_endpoints)
+  value       = join(",", module.mysql.replica_endpoints)
 }
 
 resource "aws_ssm_parameter" "mysql_port" {

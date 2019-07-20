@@ -10,7 +10,7 @@
     "build:apig": "echo 'make apig routes'",
     "build:docker": "find . -name Dockerfile -exec bash -c \"echo $(dirname {})\"",
     "lint": "npm run lint:tf && npm run lint:js",
-    "lint:tf": "terraform fmt",
+    "lint:tf": "terraform fmt -recursive -list=false",
     "lint:js": "prettier-standard './**/*.{js,json}'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

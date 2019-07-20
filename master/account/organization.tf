@@ -1,7 +1,7 @@
 module "organization" {
-  source = "git@github.com:willfarrell/terraform-account-modules//organization?ref=v0.0.2"
+  source        = "git@github.com:willfarrell/terraform-account-modules//organization?ref=v0.0.2"
   account_email = local.workspace["account_email"]
-  sub_accounts = local.workspace["sub_accounts"]
+  sub_accounts  = local.workspace["sub_accounts"]
 }
 
 output "sub_accounts" {

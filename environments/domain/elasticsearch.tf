@@ -1,7 +1,7 @@
 module "elasticsearch" {
   source = "git@github.com:willfarrell/terraform-db-modules//elasticsearch?ref=v0.0.1"
   name   = local.workspace["name"]
-  vpc_id = module.vpc.vpc_id
+  vpc_id = module.vpc.id
 
   private_subnet_ids = module.vpc.private_subnet_ids
 
@@ -19,7 +19,8 @@ module "elasticsearch" {
 
   #bootstrap_file      = local.workspace["elasticsearch_bootstrap_file"]
   security_group_ids = [
-    module.vpc.bastion_security_group_id
+    #module.bastion.security_group_id,
+    #module.ecs.security_group_id,
   ]
 }
 
