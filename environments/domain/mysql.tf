@@ -41,21 +41,21 @@ module "mysql" {
 resource "aws_ssm_parameter" "mysql_endpoint" {
   name        = "/database/mysql/endpoint"
   description = "Endpoint to connect to the database"
-  type        = "SecureString"
+  type        = "String"
   value       = module.mysql.endpoint
 }
 
 resource "aws_ssm_parameter" "mysql_endpoints" {
   name        = "/database/mysql/endpoints"
   description = "Endpoints to connect to read the database"
-  type        = "SecureString"
+  type        = "StringList"
   value       = join(",", module.mysql.replica_endpoints)
 }
 
 resource "aws_ssm_parameter" "mysql_port" {
   name        = "/database/mysql/port"
   description = "Port to connect to the database"
-  type        = "SecureString"
+  type        = "String"
   value       = module.mysql.port
 }
 
@@ -76,7 +76,7 @@ resource "aws_ssm_parameter" "mysql_password" {
 resource "aws_ssm_parameter" "mysql_database" {
   name        = "/database/mysql/database"
   description = "Database to connect to"
-  type        = "SecureString"
+  type        = "String"
   value       = module.mysql.database
 }
 

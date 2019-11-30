@@ -1,10 +1,14 @@
 # Edge Region
 
-module "api-gateway" {
-  #source = "git@github.com:willfarrell/terraform-account-modules//api-gateway?ref=v0.0.1"
-  source = "../../../../../github/terraform-sub-account-modules/api-gateway"
+module "edge-logs" {
+  #source = "git@github.com:willfarrell/terraform-logs-module?ref=v0.5.2"
+  source = "../../../../../github/terraform-logs-module"
+  name   = "${local.workspace["name"]}-${local.workspace["env"]}-edge"
   providers = {
     aws = aws.edge
+  }
+  tags = {
+    Name = "Edge Logs"
   }
 }
 
@@ -18,17 +22,25 @@ module "cloudtrail" {
   }
 }
 
-module "edge-logs" {
-  #source = "git@github.com:willfarrell/terraform-logs-module?ref=v0.5.2"
-  source = "../../../../../github/terraform-logs-module"
-  name   = "${local.workspace["name"]}-${local.workspace["env"]}-edge"
+module "apigateway-logs" {
+  #source = "git@github.com:willfarrell/terraform-account-modules//api-gateway?ref=v0.0.1"
+  source = "../../../../../github/terraform-sub-account-modules/api-gateway"
   providers = {
     aws = aws.edge
   }
-  tags = {
-    Name = "Edge Logs"
-  }
 }
+
+module "route53-logs" {
+  #source = "git@github.com:willfarrell/terraform-account-modules//route53?ref=v0.0.1"
+  source = "../../../../../github/terraform-sub-account-modules/route53"
+}
+
+module "elasticsearch-logs" {
+  #source = "git@github.com:willfarrell/terraform-account-modules//route53?ref=v0.0.1"
+  source = "../../../../../github/terraform-sub-account-modules/elasticsearch"
+}
+
+
 
 # Primary Region
 

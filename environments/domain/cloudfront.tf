@@ -40,3 +40,7 @@ module "waf" {
     aws = "aws.edge"
   }
 }
+
+output "waf_bad-bot_ipset_id" {
+  value = module.waf.ipset_bad-bot_id
+}

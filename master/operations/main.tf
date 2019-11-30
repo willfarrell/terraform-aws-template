@@ -23,7 +23,7 @@ data "terraform_remote_state" "master" {
   backend = "s3"
 
   config = {
-    bucket  = "terraform-state-{**NAME**}"
+    bucket  = "terraform-state-${local.workspace["name"]}"
     key     = "master/account/terraform.tfstate"
     region  = "us-east-1"
     profile = local.workspace["profile"]

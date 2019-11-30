@@ -25,21 +25,21 @@ module "redis" {
 resource "aws_ssm_parameter" "redis_endpoint" {
   name        = "/database/redis/endpoint"
   description = "Endpoint to connect to the database"
-  type        = "SecureString"
+  type        = "String"
   value       = module.redis.endpoint
 }
 
 resource "aws_ssm_parameter" "redis_endpoints" {
   name        = "/database/redis/endpoints"
   description = "Endpoints to connect to read the database"
-  type        = "SecureString"
+  type        = "StringList"
   value       = join(",", module.redis.replica_endpoints)
 }
 
 resource "aws_ssm_parameter" "redis_port" {
   name        = "/database/redis/port"
   description = "Port to connect to the database"
-  type        = "SecureString"
+  type        = "String"
   value       = module.redis.port
 }
 

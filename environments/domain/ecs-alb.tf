@@ -63,6 +63,8 @@ module "ecs_alb" {
   efs_security_group_ids = [
     module.efs_alb.security_group_id
   ]
+
+  assume_role_arn = matchkeys(data.terraform_remote_state.master.outputs.ecr_role_arns, keys(data.terraform_remote_state.master.outputs.sub_accounts), list(local.workspace["env"]))[0]
 }
 
 output "ecs_alb_billing_suggestion" {
@@ -79,9 +81,145 @@ module "efs_alb" {
 
 # You can use `willfarrell/hello-world` to test out the ALB
 
-# TODO sg - allow proxy access from bastion to private ports
-# TODO VPN
+# API Service
+# Ref: https://github.com/terraform-providers/terraform-provider-aws/issues/632
 
+resource "aws_ecs_task_definition" "api" {
+  family = "${local.workspace["name"]}-ecs-${local.workspace["ecs_api_name"]}-task"
+  requires_compatibilities = [
+    "EC2",
+  ]
+  cpu                = "256"
+  memory             = "256"
+  network_mode       = "bridge"
+  task_role_arn      = aws_iam_role.api_task.arn
+  execution_role_arn = module.ecs_alb.iam_execution_role_arn
+  # "image": "${data.terraform_remote_state.master.outputs.ecr_api_url}:${local.workspace["ecs_api_version"]}",
+  container_definitions = <<DEFINITION
+[
+  {
+    "name": "emr",
+    "image": "willfarrell/hello-world:latest",
+    "cpu": 256,
+    "memory": 256,
+    "essential":true,
+    "portMappings":[{
+      "hostPort":80,
+      "containerPort":80,
+      "protocol":"tcp"
+    }],
+    "environment":[
+      { "name":"PORT", "value":"80" }
+    ],
+    "logConfiguration":{
+      "logDriver": "awslogs",
+      "options":{
+        "awslogs-group":"${aws_cloudwatch_log_group.api.name}",
+        "awslogs-region":"${local.workspace["region"]}",
+        "awslogs-stream-prefix":"ecs"
+      }
+    },
+    "mountPoints":[],
+    "volumesFrom":[]
+  }
+]
+DEFINITION
 
-# TODO APIG
+  lifecycle {
+    ignore_changes = [
+      #requires_compatibilities,
+      #cpu,
+      #memory,
+      #container_definitions,
+    ]
+  }
 
+  #tags {}
+}
+
+resource "aws_cloudwatch_log_group" "api" {
+  name = "/ecs/${local.workspace["ecs_api_name"]}"
+  retention_in_days = 30
+  tags = {
+    Name = "${local.workspace["name"]}-ecs-${local.workspace["ecs_api_name"]}"
+  }
+}
+
+resource "aws_iam_role" "api_task" {
+  name = "${local.workspace["name"]}-ecs-${local.workspace["ecs_emr_name"]}-role"
+
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": [
+          "ecs-tasks.amazonaws.com"
+        ]
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+POLICY
+}
+
+resource "aws_iam_policy" "api_task" {
+  name   = "${local.workspace["name"]}-ecs-${local.workspace["ecs_emr_name"]}-policy"
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+POLICY
+}
+
+resource "aws_iam_role_policy_attachment" "api" {
+  role = aws_iam_role.api_task.name
+  policy_arn = aws_iam_policy.api_task.arn
+}
+
+resource "aws_ecs_service" "api" {
+  name = local.workspace["ecs_api_name"]
+  cluster = module.ecs_alb.arn
+  #launch_type     = ""
+  task_definition = aws_ecs_task_definition.api.arn
+
+  desired_count = 2
+  ordered_placement_strategy {
+    type = "spread"
+    field = "attribute:ecs.availability-zone"
+  }
+  ordered_placement_strategy {
+    type = "spread"
+    field = "instanceId"
+  }
+  placement_constraints {
+    type = "distinctInstance"
+  }
+
+  dynamic "load_balancer" {
+    for_each = module.alb.target_group_arns
+    content {
+      target_group_arn = load_balancer.value
+      container_name = local.workspace["ecs_api_name"]
+      container_port = 80
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      #task_definition
+    ]
+  }
+}

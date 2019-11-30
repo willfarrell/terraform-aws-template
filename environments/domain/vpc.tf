@@ -14,15 +14,23 @@ resource "aws_vpc_endpoint" "s3" {
   service_name    = "com.amazonaws.${local.workspace["region"]}.s3"
   route_table_ids = module.vpc.private_route_table_ids
 
+  tags = merge(
+  local.workspace["tags"],
+  {
+    Name = "S3"
+  }
+  )
+
   policy = <<POLICY
 {
+  "Version": "2008-10-17",
   "Statement": [
       {
           "Sid":"",
           "Effect": "Allow",
           "Action": "s3:*",
           "Resource": [
-            "arn:aws:s3:::*"
+            "arn:aws:s3:::*",
             "arn:aws:s3:::*/*"
           ],
           "Principal": "*",
@@ -41,21 +49,21 @@ POLICY
 resource "aws_ssm_parameter" "vpc_id" {
   name = "/infrastructure/vpc/id"
   description = "VPC ID"
-  type = "SecureString"
+  type = "String"
   value = module.vpc.id
 }
 
 resource "aws_ssm_parameter" "vpc_public_subnets" {
   name = "/infrastructure/vpc/public_subnets"
   description = "VPC public subnets"
-  type = "SecureString"
+  type = "String"
   value = join(",", module.vpc.public_subnet_ids)
 }
 
 resource "aws_ssm_parameter" "vpc_private_subnets" {
   name = "/infrastructure/vpc/private_subnets"
   description = "VPC private subnets"
-  type = "SecureString"
+  type = "String"
   value = join(",", module.vpc.private_subnet_ids)
 }
 
@@ -90,4 +98,32 @@ output "bastion_ip" {
 
 output "bastion_billing_suggestion" {
   value = module.bastion.billing_suggestion
+}
+
+
+## Lambda
+resource "aws_security_group" "lambda" {
+  name = "${local.workspace["name"]}-lambda-security-group"
+  vpc_id = module.vpc.id
+
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+
+  tags = merge(
+  local.workspace["tags"],
+  {
+    Name = "${local.workspace["name"]}-lambda"
+  }
+  )
+}
+
+resource "aws_ssm_parameter" "vpc_secuirty_group" {
+  name        = "/infrastructure/vpc/security_group"
+  description = "VPC security group for lambda"
+  type        = "String"
+  value       = aws_security_group.lambda.id
 }

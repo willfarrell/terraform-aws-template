@@ -45,21 +45,21 @@ module "postgres" {
 resource "aws_ssm_parameter" "postgres_endpoint" {
   name        = "/database/postgres/endpoint"
   description = "Endpoint to connect to the database"
-  type        = "SecureString"
+  type        = "String"
   value       = module.postgres.endpoint
 }
 
 resource "aws_ssm_parameter" "postgres_endpoints" {
   name        = "/database/postgres/endpoints"
   description = "Endpoints to connect to read the database"
-  type        = "SecureString"
+  type        = "StringList"
   value       = join(",", module.postgres.replica_endpoints)
 }
 
 resource "aws_ssm_parameter" "postgres_port" {
   name        = "/database/postgres/port"
   description = "Port to connect to the database"
-  type        = "SecureString"
+  type        = "String"
   value       = module.postgres.port
 }
 
@@ -80,7 +80,7 @@ resource "aws_ssm_parameter" "postgres_password" {
 resource "aws_ssm_parameter" "postgres_database" {
   name        = "/database/postgres/database"
   description = "Database to connect to"
-  type        = "SecureString"
+  type        = "String"
   value       = module.postgres.database
 }
 

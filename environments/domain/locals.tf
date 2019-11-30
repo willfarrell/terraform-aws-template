@@ -6,8 +6,17 @@ locals {
       name    = "{**NAME**}"
       region  = "ca-central-1"
 
+      tags    = {
+        Terraform   = true
+        Environment = terraform.workspace
+        Description = ""
+        #CostID = ""
+      }
+
       # VPC
       az_count = 2
+
+      bastion_instance_type = "t3a.nano"
 
       # Database
       ## Cache
@@ -54,8 +63,7 @@ locals {
       cidr_block            = "10.*.0.0/16"
       az_count              = 3
       nat_type              = "gateway"
-      bastion_instance_type = "t2.micro"
-      bastion_user_group    = "User"
+      bastion_user_group    = "ProductionDeveloper"
       bastion_sudo_group    = "ProductionAdmin"
 
       # Database
@@ -76,7 +84,7 @@ locals {
       mysql_backup_retention_period = 90
 
       postgres_type                    = "cluster"
-      postgres_engine                  = "aurora-postgres"
+      postgres_engine                  = "aurora-postgresql"
       postgres_node_count              = 2
       postgres_replica_count           = 2
       postgres_allocated_storage       = 256
@@ -100,8 +108,7 @@ locals {
       cidr_block            = "10.*.0.0/16"
       az_count              = 2
       nat_type              = "gateway"
-      bastion_instance_type = "t2.micro"
-      bastion_user_group    = "User"
+      bastion_user_group    = "StagingDeveloper"
       bastion_sudo_group    = "StagingAdmin"
 
       # Database
@@ -122,7 +129,7 @@ locals {
       mysql_backup_retention_period = 30
 
       postgres_type                    = "cluster"
-      postgres_engine                  = "aurora-postgres"
+      postgres_engine                  = "aurora-postgresql"
       postgres_node_count              = 2
       postgres_replica_count           = 1
       postgres_allocated_storage       = 64
@@ -144,8 +151,7 @@ locals {
       cidr_block            = "10.*.0.0/16"
       az_count              = 2
       nat_type              = "instance"
-      bastion_instance_type = "t2.micro"
-      bastion_user_group    = "User"
+      bastion_user_group    = "TestingDeveloper"
       bastion_sudo_group    = "TestingAdmin"
 
       # Database
@@ -188,8 +194,7 @@ locals {
       cidr_block            = "10.*.0.0/16"
       az_count              = 2
       nat_type              = "instance"
-      bastion_instance_type = "t2.micro"
-      bastion_user_group    = "User"
+      bastion_user_group    = "DevelopmentDeveloper"
       bastion_sudo_group    = "DevelopmentAdmin"
 
       # Database
